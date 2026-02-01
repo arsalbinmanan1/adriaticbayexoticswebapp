@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import Image from "next/image";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
@@ -32,8 +33,17 @@ const navItems = [
 const NavContent = ({ collapsed, pathname }: { collapsed: boolean; pathname: string }) => (
   <div className="flex flex-col h-full bg-neutral-950 text-white border-r border-neutral-800">
     <div className="p-6 flex items-center gap-3">
-      <div className="w-8 h-8 bg-white rounded flex items-center justify-center text-black font-bold">A</div>
-      {!collapsed && <span className="font-bold text-lg">Adriatic Admin</span>}
+      {collapsed ? (
+        <div className="w-8 h-8 bg-white rounded flex items-center justify-center text-black font-bold">A</div>
+      ) : (
+        <Image 
+          src="/adriaticlogo.png" 
+          alt="Adriatic Bay Exotics" 
+          width={150} 
+          height={50}
+          className="h-8 w-auto"
+        />
+      )}
     </div>
 
     <ScrollArea className="flex-1 px-4">

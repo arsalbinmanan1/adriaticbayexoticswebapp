@@ -1,6 +1,7 @@
 "use client";
 
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -9,9 +10,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Adriaticbay <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">Exotics</span>
-            </h3>
+            <a href="/" className="inline-block mb-4">
+              <Image 
+                src="/adriaticlogo.png" 
+                alt="Adriatic Bay Exotics Logo" 
+                width={160} 
+                height={53}
+                className="h-10 w-auto"
+              />
+            </a>
             <p className="text-gray-400 mb-6 leading-relaxed">
               Experience the ultimate in luxury car rentals. Drive your dreams.
             </p>
@@ -97,7 +104,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-500 text-sm">
-            © 2026 Adriaticbay Exotics. All rights reserved.
+            © 2026 Adriatic Bay Exotics. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors">

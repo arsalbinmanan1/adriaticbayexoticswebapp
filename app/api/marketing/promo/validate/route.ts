@@ -28,24 +28,30 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ valid: false, message: "This promo code is no longer active" });
         }
 
-        if (new Date(promo.start_date) > now) {
+        // Support both old and new column names for date fields
+        const startDate = promo.starts_at || promo.start_date;
+        const endDate = promo.expires_at || promo.end_date;
+        
+        if (startDate && new Date(startDate) > now) {
             return NextResponse.json({ valid: false, message: "This promo code is not active yet" });
         }
 
-        if (new Date(promo.end_date) < now) {
+        if (endDate && new Date(endDate) < now) {
             return NextResponse.json({ valid: false, message: "This promo code has expired" });
         }
 
-        // 3. Check usage limits
-        if (promo.max_uses && promo.times_used >= promo.max_uses) {
+        // 3. Check usage limits - support both column names
+        const usageCount = promo.used_count !== undefined ? promo.used_count : promo.times_used;
+        if (promo.max_uses && usageCount >= promo.max_uses) {
             return NextResponse.json({ valid: false, message: "This promo code has reached its usage limit" });
         }
 
-        // 4. Check rental days requirement
-        if (rentalDays && promo.min_rental_days && rentalDays < promo.min_rental_days) {
+        // 4. Check rental days requirement - support both column names
+        const minDays = promo.min_booking_amount || promo.min_rental_days;
+        if (rentalDays && minDays && rentalDays < minDays) {
             return NextResponse.json({
                 valid: false,
-                message: `This promo code requires a minimum of ${promo.min_rental_days} rental days`
+                message: `This promo code requires a minimum of ${minDays} rental days`
             });
         }
 

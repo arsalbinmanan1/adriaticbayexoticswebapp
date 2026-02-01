@@ -21,6 +21,7 @@ interface CalculationInput {
     discountType?: 'percentage' | 'fixed'
     addOns?: AddOn[]
     deliveryFee?: number
+    fixedDeposit?: number // Use car's actual security_deposit from database
 }
 
 interface CalculationOutput {
@@ -38,7 +39,7 @@ const TAX_RATE = 0.07 // 7%
 const MIN_SECURITY_DEPOSIT = 300 // $300
 
 export const calculateAmounts = (input: CalculationInput): CalculationOutput => {
-    const { dailyRate, numberOfDays, discountValue = 0, discountType, addOns = [], deliveryFee = 0 } = input
+    const { dailyRate, numberOfDays, discountValue = 0, discountType, addOns = [], deliveryFee = 0, fixedDeposit } = input
 
     // 1. Rental Subtotal (Base Rate)
     const rentalSubtotal = dailyRate * numberOfDays
@@ -69,9 +70,16 @@ export const calculateAmounts = (input: CalculationInput): CalculationOutput => 
     // 5. Total Rental Amount
     const totalRentalAmount = Number((taxableAmount + taxAmount).toFixed(2))
 
-    // 6. Security Deposit Logic: MAX($300, 20% of Total)
-    const calculatedDeposit = totalRentalAmount * 0.20
-    const securityDepositAmount = Number(Math.max(MIN_SECURITY_DEPOSIT, calculatedDeposit).toFixed(2))
+    // 6. Security Deposit: Use fixed deposit from car database, fallback to calculation
+    let securityDepositAmount: number
+    if (fixedDeposit && fixedDeposit > 0) {
+        // Use the car's actual security_deposit from database
+        securityDepositAmount = Number(fixedDeposit.toFixed(2))
+    } else {
+        // Fallback: MAX($300, 20% of Total) - for backward compatibility
+        const calculatedDeposit = totalRentalAmount * 0.20
+        securityDepositAmount = Number(Math.max(MIN_SECURITY_DEPOSIT, calculatedDeposit).toFixed(2))
+    }
 
     // 7. Remaining Balance (Total - Deposit)
     // The balance is the full amount if deposit is just a hold, but here we keep it simple

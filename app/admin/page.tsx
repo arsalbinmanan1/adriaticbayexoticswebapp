@@ -29,7 +29,7 @@ export default async function DashboardPage() {
   const { data: revenueData } = await supabase
     .from("bookings")
     .select("total_amount")
-    .eq("payment_status", "deposit_paid");
+    .eq("status", "confirmed"); // Count all confirmed bookings
 
   const totalRevenue = revenueData?.reduce((acc, curr) => acc + Number(curr.total_amount), 0) || 0;
 

@@ -41,7 +41,21 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
   const [copied, setCopied] = useState(false);
   const [formData, setLocalFormData] = useState<FormData | null>(null);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>();
+
+  // Reset state when popup opens/closes
+  useEffect(() => {
+    if (!isOpen) {
+      // Reset all state when popup closes
+      setHasSubmitted(false);
+      setIsSpinning(false);
+      setShowResult(false);
+      setSelectedPrize(null);
+      setLocalFormData(null);
+      setCopied(false);
+      reset();
+    }
+  }, [isOpen, reset]);
 
   const onSubmit = (data: FormData) => {
     setLocalFormData(data);
@@ -171,7 +185,7 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
                 </Button>
 
                 <p className="text-xs text-gray-500 mt-4">
-                  By submitting, you agree to receive promotional messages from Adriaticbay Exotics.
+                  By submitting, you agree to receive promotional messages from Adriatic Bay Exotics.
                 </p>
               </form>
             </div>

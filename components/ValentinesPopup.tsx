@@ -50,78 +50,57 @@ export default function ValentinesPopup({ isOpen, onClose }: ValentinesPopupProp
         ))}
       </div>
 
-      <Card className="relative bg-gradient-to-br from-red-900/95 via-pink-900/95 to-red-900/95 border-red-600 max-w-3xl w-full my-4 shadow-2xl overflow-hidden backdrop-blur-xl">
+      <Card className="relative bg-gradient-to-br from-red-900/95 via-pink-900/95 to-red-900/95 border-red-600 max-w-md w-full my-4 shadow-2xl overflow-hidden backdrop-blur-xl">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-white/80 hover:text-white transition-colors z-10"
+          className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors z-10"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        <CardContent className="p-6 md:p-8">
-          <div className="text-center mb-6">
-            <div className="relative inline-block mb-3">
+        <CardContent className="p-4 md:p-5">
+          <div className="text-center mb-4">
+            <div className="relative inline-block mb-2">
               <Heart
-                className="w-12 h-12 text-red-500 animate-pulse"
+                className="w-8 h-8 text-red-500 animate-pulse"
                 fill="currentColor"
               />
               <div className="absolute inset-0 animate-ping">
-                <Heart className="w-12 h-12 text-red-500 opacity-75" fill="currentColor" />
+                <Heart className="w-8 h-8 text-red-500 opacity-75" fill="currentColor" />
               </div>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Valentine's Special</h2>
-            <div className="inline-block bg-white/10 backdrop-blur-md border border-white/20 px-6 py-2 rounded-full mb-4">
-              <p className="text-xl md:text-2xl font-bold text-white">20% OFF AUTOMATIC</p>
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Valentine's Special</h2>
+            <div className="inline-block bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1 rounded-full mb-2">
+              <p className="text-base md:text-lg font-bold text-white">20% OFF</p>
             </div>
-            <p className="text-pink-100 text-lg">Use code below or click "Book Now" to apply</p>
+            <p className="text-pink-100 text-sm">Use code or click "Book Now"</p>
           </div>
 
           {/* Promo Code Display */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-4 mb-6 text-center group cursor-pointer hover:bg-white/10 transition-colors" onClick={copyToClipboard}>
-            <p className="text-pink-200 text-xs uppercase tracking-widest mb-2">Exclusive Promo Code</p>
-            <div className="flex items-center justify-center gap-3">
-              <code className="text-3xl md:text-4xl font-mono font-bold text-white tracking-widest">
+          <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-3 text-center group cursor-pointer hover:bg-white/10 transition-colors" onClick={copyToClipboard}>
+            <p className="text-pink-200 text-[10px] uppercase tracking-widest mb-1">Promo Code</p>
+            <div className="flex items-center justify-center gap-2">
+              <code className="text-xl md:text-2xl font-mono font-bold text-white tracking-wider">
                 {PROMO_CODE}
               </code>
-              {copied ? <Check className="w-6 h-6 text-green-400" /> : <Copy className="w-6 h-6 text-white/50 group-hover:text-white transition-colors" />}
+              {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />}
             </div>
           </div>
 
-          {/* Featured Cars */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-            {featuredCars.map((car) => (
-              <div
-                key={car.slug}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10 hover:border-red-500/50 transition-all hover:scale-105"
-              >
-                <h3 className="text-white font-bold text-base mb-1">{car.name}</h3>
-                <p className="text-pink-300 font-bold mb-3">{car.price}/day</p>
-                <Link href={`/fleet/${car.slug}?promo=${PROMO_CODE}`}>
-                  <Button
-                    onClick={onClose}
-                    size="sm"
-                    className="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-full"
-                  >
-                    View Details
-                  </Button>
-                </Link>
-              </div>
-            ))}
-          </div>
 
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href={`/fleet?promo=${PROMO_CODE}`} className="w-full sm:w-auto">
+          <div className="flex gap-2 justify-center">
+            <Link href={`/fleet?promo=${PROMO_CODE}`} className="flex-1">
               <Button
                 onClick={onClose}
-                className="bg-white text-red-600 hover:bg-pink-100 font-bold px-8 rounded-full w-full"
+                className="bg-white text-red-600 hover:bg-pink-100 font-bold px-4 py-2 rounded-full w-full text-sm"
               >
                 Book Now & Save
               </Button>
             </Link>
           </div>
-          <p className="text-white/40 text-[10px] text-center mt-6">
-            * Offer valid from Feb 10 - Feb 17, 2026. Cannot be combined with other offers.
+          <p className="text-white/40 text-[8px] text-center mt-3">
+            * Valid Feb 10-17, 2026. Cannot be combined with other offers.
           </p>
         </CardContent>
       </Card>

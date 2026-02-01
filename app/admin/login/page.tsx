@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Lock } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -45,8 +46,14 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-neutral-950 px-4">
       <Card className="w-full max-w-md border-neutral-800 bg-neutral-950 text-white">
         <CardHeader className="space-y-1 text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-neutral-900">
-            <Lock className="h-6 w-6 text-neutral-400" />
+          <div className="mx-auto mb-4 flex items-center justify-center">
+            <Image 
+              src="/adriaticlogo.png" 
+              alt="Adriatic Bay Exotics" 
+              width={200} 
+              height={67}
+              className="h-16 w-auto"
+            />
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">Admin Portal</CardTitle>
           <CardDescription className="text-neutral-400">

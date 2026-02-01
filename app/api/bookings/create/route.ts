@@ -169,6 +169,7 @@ export async function POST(request: Request) {
             discountType,
             addOns: body.addOns || [],
             deliveryFee: body.deliveryFee || 0,
+            fixedDeposit: Number(car.security_deposit) // Use car's actual deposit
         })
 
         // 6. Insert Booking
@@ -203,7 +204,7 @@ export async function POST(request: Request) {
                 promo_code: promoCode,
                 discount_type: discountType,
                 deposit_amount: pricing.securityDepositAmount,
-                status: 'pending',
+                status: 'confirmed', // Default to confirmed instead of pending
                 payment_status: 'unpaid'
             })
             .select()

@@ -24,7 +24,7 @@ export default function AboutSection() {
             </h2>
             
             <p className="text-gray-400 text-lg mb-6 leading-relaxed">
-              At Adriaticbay Exotics, we believe that driving should be more than just transportation—it should be an unforgettable experience. Our curated collection features the world&apos;s most prestigious automotive masterpieces.
+              At Adriatic Bay Exotics, we believe that driving should be more than just transportation—it should be an unforgettable experience. Our curated collection features the world&apos;s most prestigious automotive masterpieces.
             </p>
             
             <p className="text-gray-400 text-lg mb-8 leading-relaxed">

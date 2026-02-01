@@ -1,16 +1,16 @@
+'use client'
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { CheckCircle2, Calendar, Mail, FileText, Share2, Download } from "lucide-react";
+import { useSearchParams } from 'next/navigation';
 
 
-export default async function SuccessPage({ 
-  searchParams 
-}: { 
-  searchParams: Promise<{ bookingId?: string }> 
-}) {
-  const { bookingId } = await searchParams;
+export default function SuccessPage() {
+  const searchParams = useSearchParams();
+  const bookingId = searchParams.get('bookingId');
 
   const downloadICS = () => {
     // Basic ICS generation logic

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,7 +22,7 @@ export default function Navigation() {
     { name: "Fleet", href: "/fleet" },
     { name: "About", href: "/about" },
     { name: "Testimonials", href: "/#testimonials" },
-    { name: "Contact", href: "/#contact" },
+    { name: "Contact", href: "/contact" },
   ];
 
   return (
@@ -35,8 +36,15 @@ export default function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="text-2xl font-bold text-white">
-            Adriaticbay <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">Exotics</span>
+          <a href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+            <Image 
+              src="/adriaticlogo.png" 
+              alt="Adriatic Bay Exotics Logo" 
+              width={180} 
+              height={120}
+              className="h-12 w-auto"
+              priority
+            />
           </a>
 
           {/* Desktop Navigation */}

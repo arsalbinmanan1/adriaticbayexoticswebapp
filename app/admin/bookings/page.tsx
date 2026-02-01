@@ -17,13 +17,14 @@ import { Input } from "@/components/ui/input";
 export default async function BookingsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const supabase = createAdminClient();
   
-  // Extract filters from URL
-  const status = typeof searchParams.status === "string" ? searchParams.status : undefined;
-  const search = typeof searchParams.q === "string" ? searchParams.q : undefined;
+  // Extract filters from URL (await searchParams in Next.js 15+)
+  const params = await searchParams;
+  const status = typeof params.status === "string" ? params.status : undefined;
+  const search = typeof params.q === "string" ? params.q : undefined;
 
   let query = supabase
     .from("bookings")

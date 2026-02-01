@@ -63,7 +63,7 @@ export default function AboutPageContent() {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
               About{" "}
               <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
-                Adriaticbay Exotics
+                Adriatic Bay Exotics
               </span>
             </h1>
             <p className="text-xl text-gray-400 italic mb-2">
@@ -114,7 +114,7 @@ export default function AboutPageContent() {
                 </h2>
                 <div className="space-y-4 text-gray-300 text-lg leading-relaxed">
                   <p>
-                    At Adriaticbay Exotics, we believe that driving should be an extraordinary experience. Our mission is to provide discerning clients with access to the world&apos;s most exclusive and high-performance vehicles, paired with exceptional service that exceeds expectations.
+                    At Adriatic Bay Exotics, we believe that driving should be an extraordinary experience. Our mission is to provide discerning clients with access to the world&apos;s most exclusive and high-performance vehicles, paired with exceptional service that exceeds expectations.
                   </p>
                   <p>
                     Founded by automotive enthusiasts, we&apos;ve curated a collection of the finest exotic and luxury vehicles. Each car in our fleet is meticulously maintained and presented in pristine condition, ensuring every journey is memorable.
@@ -123,7 +123,7 @@ export default function AboutPageContent() {
                     We don&apos;t just rent cars—we provide access to automotive masterpieces. From the raw power of Italian supercars to the refined elegance of British luxury, our fleet represents the pinnacle of automotive engineering and design.
                   </p>
                   <p>
-                    Whether you&apos;re celebrating a special occasion, making a statement at an event, or simply fulfilling a lifelong dream, Adriaticbay Exotics transforms ordinary moments into extraordinary memories.
+                    Whether you&apos;re celebrating a special occasion, making a statement at an event, or simply fulfilling a lifelong dream, Adriatic Bay Exotics transforms ordinary moments into extraordinary memories.
                   </p>
                 </div>
               </div>
@@ -186,36 +186,7 @@ export default function AboutPageContent() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24 bg-zinc-900 relative overflow-hidden">
-        {/* Decorative background */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-600 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500 rounded-full blur-3xl"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={stat.label}
-                  className="text-center p-8 rounded-2xl bg-zinc-800/50 border border-zinc-700 hover:border-red-600 transition-all duration-300 hover:transform hover:scale-105"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <Icon className="w-10 h-10 text-amber-400 mx-auto mb-4" />
-                  <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-gray-400 font-medium">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
+      
       {/* Why Choose Us Section */}
       <section className="py-24 bg-zinc-950">
         <div className="container mx-auto px-4">
@@ -224,7 +195,7 @@ export default function AboutPageContent() {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Why Choose{" "}
                 <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
-                  Adriaticbay Exotics
+                  Adriatic Bay Exotics
                 </span>
               </h2>
               <p className="text-gray-400 text-lg max-w-2xl mx-auto">
@@ -306,7 +277,7 @@ export default function AboutPageContent() {
               Our Commitment to You
             </h2>
             <p className="text-xl text-white/90 leading-relaxed mb-8">
-              At Adriaticbay Exotics, your satisfaction and safety are our top priorities. Every rental includes comprehensive insurance, 24/7 roadside assistance, and our commitment to making your luxury car experience unforgettable.
+              At Adriatic Bay Exotics, your satisfaction and safety are our top priorities. Every rental includes comprehensive insurance, 24/7 roadside assistance, and our commitment to making your luxury car experience unforgettable.
             </p>
             <p className="text-lg text-white/80">
               Join thousands of satisfied clients who have trusted us to deliver the ultimate driving experience.

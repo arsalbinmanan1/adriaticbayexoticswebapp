@@ -70,14 +70,19 @@ export default function SquarePaymentForm({
         // 2. Perform 3D Secure verification if required
         try {
           console.log('[SQUARE] Verifying buyer (3DS)...');
+          // Square requires name fields to be max 45 characters
+          const nameParts = buyerName?.split(' ') || ['Customer']
+          const givenName = (nameParts[0] || 'Customer').slice(0, 45)
+          const familyName = (nameParts.slice(1).join(' ') || 'User').slice(0, 45)
+          
           const verificationResults = await payments.verifyBuyer(token, {
             amount: amount.toFixed(2),
             currencyCode: 'USD',
             intent: 'CHARGE',
             billingContact: {
-              givenName: buyerName?.split(' ')[0] || 'Customer',
-              familyName: buyerName?.split(' ').slice(1).join(' ') || 'User',
-              email: buyerEmail,
+              givenName,
+              familyName,
+              email: buyerEmail?.slice(0, 255), // Email max 255 chars
             },
           })
           verificationToken = verificationResults.token

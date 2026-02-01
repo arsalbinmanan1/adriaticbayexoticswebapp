@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import MarketingHooks from "@/components/MarketingHooks";
+import ConditionalMarketingHooks from "@/components/ConditionalMarketingHooks";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Adriaticbay Exotics | Premium Luxury Car Rentals",
-  description: "Experience the ultimate in luxury car rentals. Drive exotic supercars and premium vehicles with Adriaticbay Exotics.",
+  title: "Adriatic Bay Exotics | Premium Luxury Car Rentals",
+  description: "Experience the ultimate in luxury car rentals. Drive exotic supercars and premium vehicles with Adriatic Bay Exotics.",
+  icons: {
+    icon: [
+      {
+        url: "/adriaticlogo.png",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/adriaticlogo.png",
+        type: "image/png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +43,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <MarketingHooks />
+        <ConditionalMarketingHooks />
       </body>
     </html>
   );

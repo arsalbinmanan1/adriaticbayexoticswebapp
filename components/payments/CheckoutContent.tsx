@@ -119,7 +119,8 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
       discountValue: appliedPromo?.discount,
       discountType: appliedPromo?.type as any,
       addOns: selectedAddOns,
-      deliveryFee: watchedFields.dropoffLocation === 'Delivery' ? 150 : 0
+      deliveryFee: watchedFields.dropoffLocation === 'Delivery' ? 150 : 0,
+      fixedDeposit: car.pricing.deposit // Use car's actual deposit amount
     })
 
   }
@@ -228,11 +229,57 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
     const code = watchedFields.promoCode
     if (!code) return
     
-    // In a real app, this would be an API call
-    if (code.toUpperCase() === 'WELCOME2024') {
-      setAppliedPromo({ code, discount: 10, type: 'percentage' })
-    } else {
-      setError('Invalid promo code')
+    setError(null)
+    
+    try {
+      // Calculate rental days
+      const pickupDate = new Date(watchedFields.pickupDate)
+      const dropoffDate = new Date(watchedFields.dropoffDate)
+      const rentalDays = Math.ceil((dropoffDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24))
+      
+      const response = await fetch('/api/marketing/promo/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: code.toUpperCase(),
+          carId: car.id,
+          rentalDays
+        })
+      })
+      
+      const data = await response.json()
+      
+      if (data.valid) {
+        setAppliedPromo({ 
+          code: data.code, 
+          discount: data.discount_value, 
+          type: data.discount_type 
+        })
+        Swal.fire({
+          icon: 'success',
+          title: 'Promo Applied!',
+          text: `${data.discount_value}${data.discount_type === 'percentage' ? '%' : '$'} discount applied`,
+          background: '#18181b',
+          color: '#fff',
+          confirmButtonColor: '#10b981',
+          timer: 2000
+        })
+      } else {
+        setError(data.message || 'Invalid promo code')
+        setAppliedPromo(null)
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid Code',
+          text: data.message || 'This promo code is not valid',
+          background: '#18181b',
+          color: '#fff',
+          confirmButtonColor: '#ef4444'
+        })
+      }
+    } catch (err) {
+      console.error('Promo validation error:', err)
+      setError('Failed to validate promo code')
+      setAppliedPromo(null)
     }
   }
 
@@ -612,12 +659,49 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                     <input 
                       {...register('promoCode')} 
                       className={`flex-1 bg-zinc-800 text-white px-4 py-2 rounded-lg text-xs outline-none transition-all placeholder:text-zinc-600
-                        ${errors.promoCode ? 'border-2 border-red-500/50' : 'border border-zinc-700 focus:ring-1 focus:ring-amber-500'}`}
+                        ${appliedPromo ? 'border-2 border-green-500/50' : errors.promoCode ? 'border-2 border-red-500/50' : 'border border-zinc-700 focus:ring-1 focus:ring-amber-500'}`}
                       placeholder="ENTER CODE"
+                      disabled={!!appliedPromo}
                     />
 
-                    <button onClick={applyPromoCode} type="button" className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-colors">Apply</button>
+                    {appliedPromo ? (
+                      <button 
+                        onClick={() => {
+                          setAppliedPromo(null)
+                          setValue('promoCode', '')
+                        }} 
+                        type="button" 
+                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-colors"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={applyPromoCode} 
+                        type="button" 
+                        className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase transition-colors"
+                      >
+                        Apply
+                      </button>
+                    )}
                   </div>
+                  {appliedPromo && (
+                    <div className="flex items-center gap-2 text-green-400 text-xs">
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>
+                        {appliedPromo.type === 'percentage' 
+                          ? `${appliedPromo.discount}% discount applied!` 
+                          : `$${appliedPromo.discount} discount applied!`
+                        }
+                      </span>
+                    </div>
+                  )}
+                  {error && !appliedPromo && (
+                    <div className="flex items-center gap-2 text-red-400 text-xs">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>{error}</span>
+                    </div>
+                  )}
                 </div>
               )}
 

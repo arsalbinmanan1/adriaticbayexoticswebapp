@@ -56,13 +56,12 @@ export async function POST(req: NextRequest) {
                     code,
                     discount_type: selectedPrize.type,
                     discount_value: selectedPrize.discount,
-                    start_date: new Date().toISOString(),
-                    end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days validity
+                    starts_at: new Date().toISOString(),
+                    expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days validity
                     max_uses: 1,
-                    campaign_id: campaign.id,
-                    is_unique: true,
-                    status: "active",
+                    used_count: 0,
                     campaign_source: "spin_wheel",
+                    status: "active",
                 })
                 .select()
                 .single();

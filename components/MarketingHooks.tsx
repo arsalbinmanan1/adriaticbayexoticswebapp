@@ -111,11 +111,25 @@ export default function MarketingHooks() {
     setShowValentines(false);
   }, []);
 
+  const handleOpenSpinWheel = useCallback(() => {
+    setShowSpinWheel(true);
+  }, []);
+
+  const handleOpenValentines = useCallback(() => {
+    setShowValentines(true);
+  }, []);
+
   if (!isMounted) return null;
 
   return (
     <>
-      {activeCampaign && <MarketingBanner campaign={activeCampaign} />}
+      {activeCampaign && (
+        <MarketingBanner 
+          campaign={activeCampaign}
+          onOpenSpinWheel={handleOpenSpinWheel}
+          onOpenValentines={handleOpenValentines}
+        />
+      )}
       <SpinWheelPopup isOpen={showSpinWheel} onClose={handleCloseSpinWheel} />
       <ValentinesPopup isOpen={showValentines} onClose={handleCloseValentines} />
     </>

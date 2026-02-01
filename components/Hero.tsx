@@ -19,7 +19,7 @@ export default function Hero() {
           </div>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight">
-            ADRIATICBAY EXOTICS
+            ADRIATIC BAY EXOTICS
             <br />
             <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
               EXPERIENCE
