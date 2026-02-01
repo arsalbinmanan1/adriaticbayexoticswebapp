@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import MarketingHooks from "./MarketingHooks";
 
@@ -15,5 +16,9 @@ export default function ConditionalMarketingHooks() {
     return null;
   }
   
-  return <MarketingHooks />;
+  return (
+    <Suspense fallback={null}>
+      <MarketingHooks />
+    </Suspense>
+  );
 }

@@ -233,8 +233,8 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
     
     try {
       // Calculate rental days
-      const pickupDate = new Date(watchedFields.pickupDate)
-      const dropoffDate = new Date(watchedFields.dropoffDate)
+      const pickupDate = new Date(watchedFields.pickupDatetime)
+      const dropoffDate = new Date(watchedFields.dropoffDatetime)
       const rentalDays = Math.ceil((dropoffDate.getTime() - pickupDate.getTime()) / (1000 * 60 * 60 * 24))
       
       const response = await fetch('/api/marketing/promo/validate', {
