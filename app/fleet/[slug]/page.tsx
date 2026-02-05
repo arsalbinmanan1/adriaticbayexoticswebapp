@@ -2,12 +2,9 @@ import { getCarBySlug, getAllCars } from "@/lib/supabase/cars";
 import { notFound } from "next/navigation";
 import CarDetailClient from "@/components/CarDetailClient";
 
-export async function generateStaticParams() {
-  const cars = await getAllCars();
-  return cars.map((car) => ({
-    slug: car.slug,
-  }));
-}
+// Force dynamic rendering - always fetch fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function CarDetailPage({ 
   params 
