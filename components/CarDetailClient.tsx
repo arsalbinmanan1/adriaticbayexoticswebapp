@@ -42,11 +42,11 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <div className="mb-6 text-sm">
-            <Link href="/" className="text-gray-400 hover:text-amber-400">
+            <Link href="/" className="text-gray-400 hover:text-yellow-400">
               Home
             </Link>
             <span className="text-gray-600 mx-2">/</span>
-            <Link href="/fleet" className="text-gray-400 hover:text-amber-400">
+            <Link href="/fleet" className="text-gray-400 hover:text-yellow-400">
               Fleet
             </Link>
             <span className="text-gray-600 mx-2">/</span>
@@ -71,7 +71,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                     className={`rounded-lg overflow-hidden border-2 transition-all ${
                       selectedImage === image
                         ? "border-red-600"
-                        : "border-zinc-800 hover:border-amber-500/50"
+                        : "border-zinc-800 hover:border-yellow-500/50"
                     }`}
                   >
                     <img
@@ -86,7 +86,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
 
             {/* Car Info */}
             <div>
-              <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 text-amber-400 border-amber-500/30">
+              <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-yellow-500/10 text-yellow-400 border-yellow-500/30">
                 {car.category.toUpperCase()}
               </Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -95,7 +95,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
               
               {/* The Vibe */}
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-amber-400 mb-2">The Vibe</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-2">The Vibe</h3>
                 <p className="text-gray-300 text-lg leading-relaxed">
                   {car.detailedDescription.vibe}
                 </p>
@@ -103,11 +103,11 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
 
               {/* Key Highlights */}
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-amber-400 mb-3">Key Highlights</h3>
+                <h3 className="text-xl font-bold text-yellow-400 mb-3">Key Highlights</h3>
                 <ul className="space-y-2">
                   {car.detailedDescription.highlights.map((highlight, index) => (
                     <li key={index} className="text-gray-300 leading-relaxed flex items-start gap-2">
-                      <span className="text-amber-400 mt-1">•</span>
+                      <span className="text-yellow-400 mt-1">•</span>
                       <span>{highlight}</span>
                     </li>
                   ))}
@@ -134,8 +134,8 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                   </h3>
                   
                   {car.pricing.specialOffer && (
-                    <div className="mb-4 p-3 bg-gradient-to-r from-red-600/20 to-amber-500/20 border border-amber-500/30 rounded-lg">
-                      <p className="text-amber-400 font-bold text-center text-sm">
+                    <div className="mb-4 p-3 bg-gradient-to-r from-red-600/20 to-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                      <p className="text-yellow-400 font-bold text-center text-sm">
                         🎉 {car.pricing.specialOffer}
                       </p>
                     </div>
@@ -144,7 +144,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                   <div className="space-y-3">
                     <div className="flex justify-between items-center pb-3 border-b border-zinc-700">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-5 h-5 text-amber-400" />
+                        <Calendar className="w-5 h-5 text-yellow-400" />
                         <span className="text-gray-300">Per Day</span>
                       </div>
                       <span className="text-3xl font-bold text-red-500">
@@ -154,7 +154,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                     {car.pricing.fourHours && (
                       <div className="flex justify-between items-center pb-3 border-b border-zinc-700">
                         <div className="flex items-center gap-2">
-                          <Clock className="w-5 h-5 text-amber-400" />
+                          <Clock className="w-5 h-5 text-yellow-400" />
                           <span className="text-gray-300">4 Hours</span>
                         </div>
                         <span className="text-2xl font-bold text-red-500">
@@ -176,7 +176,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
               </Card>
 
               {/* Contact CTA */}
-              <Card className="bg-gradient-to-br from-red-700 to-amber-600 border-0 mb-6">
+              <Card className="bg-gradient-to-br from-red-700 to-red-600 border-0 mb-6">
                 <CardContent className="p-6">
                   <h3 className="text-white font-bold text-lg mb-4">
                     Contact Us for Booking
@@ -189,7 +189,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                       <p className="text-white/80 text-xs mb-2">CEO Emanuel</p>
                       <a
                         href="tel:+17272245544"
-                        className="flex items-center gap-3 text-white hover:text-amber-100 transition-colors"
+                        className="flex items-center gap-3 text-white hover:text-yellow-100 transition-colors"
                       >
                         <Phone className="w-5 h-5" />
                         <span className="font-semibold">+1 (727) 224-5544</span>
@@ -200,7 +200,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                       <p className="text-white/80 text-xs mb-2">CEO Volis</p>
                       <a
                         href="tel:+17279220141"
-                        className="flex items-center gap-3 text-white hover:text-amber-100 transition-colors"
+                        className="flex items-center gap-3 text-white hover:text-yellow-100 transition-colors"
                       >
                         <Phone className="w-5 h-5" />
                         <span className="font-semibold">+1 (727) 922-0141</span>
@@ -249,21 +249,21 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-5xl mx-auto">
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Settings className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Settings className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">Engine</p>
                 <p className="text-white font-semibold text-sm">{car.specs.engine}</p>
               </CardContent>
             </Card>
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Zap className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Zap className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">Power</p>
                 <p className="text-white font-semibold text-sm">{car.specs.horsepower}</p>
               </CardContent>
             </Card>
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Gauge className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Gauge className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">0-60 mph</p>
                 <p className="text-white font-semibold text-sm">
                   {car.specs.acceleration.replace("0-60 mph in ", "")}
@@ -272,14 +272,14 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             </Card>
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Gauge className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Gauge className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">Top Speed</p>
                 <p className="text-white font-semibold text-sm">{car.specs.topSpeed}</p>
               </CardContent>
             </Card>
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Settings className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Settings className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">Trans.</p>
                 <p className="text-white font-semibold text-sm">
                   {car.specs.transmission.replace("-Speed", "Spd")}
@@ -288,7 +288,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             </Card>
             <Card className="bg-zinc-900 border-zinc-800 text-center">
               <CardContent className="p-6">
-                <Settings className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+                <Settings className="w-8 h-8 text-yellow-400 mx-auto mb-3" />
                 <p className="text-gray-500 text-sm mb-1">Drive</p>
                 <p className="text-white font-semibold text-sm">{car.specs.drivetrain}</p>
               </CardContent>
@@ -309,7 +309,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                 key={index}
                 className="flex items-center gap-3 p-4 bg-zinc-800/50 rounded-lg"
               >
-                <CheckCircle2 className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                 <span className="text-gray-300">{feature}</span>
               </div>
             ))}
@@ -328,7 +328,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <Calendar className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <Calendar className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Age Requirement</h3>
                     <p className="text-gray-400 text-sm">
@@ -343,7 +343,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <FileText className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <FileText className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Valid License</h3>
                     <p className="text-gray-400 text-sm">
@@ -358,7 +358,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <CreditCard className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <CreditCard className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Credit Card</h3>
                     <p className="text-gray-400 text-sm">
@@ -373,7 +373,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <Shield className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <Shield className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Driving Record</h3>
                     <p className="text-gray-400 text-sm">
@@ -388,7 +388,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <DollarSign className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <DollarSign className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Security Deposit</h3>
                     <p className="text-gray-400 text-sm">
@@ -403,7 +403,7 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             <Card className="bg-zinc-900 border-zinc-800">
               <CardContent className="p-6">
                 <div className="flex items-start gap-3 mb-4">
-                  <Clock className="w-6 h-6 text-amber-400 flex-shrink-0 mt-1" />
+                  <Clock className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-white font-bold mb-2">Rental Period</h3>
                     <p className="text-gray-400 text-sm">

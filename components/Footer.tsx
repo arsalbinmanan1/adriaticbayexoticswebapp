@@ -23,16 +23,16 @@ export default function Footer() {
               Experience the ultimate in luxury car rentals. Drive your dreams.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-amber-500 flex items-center justify-center transition-all">
+              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Facebook className="w-5 h-5 text-white" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-amber-500 flex items-center justify-center transition-all">
+              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Instagram className="w-5 h-5 text-white" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-amber-500 flex items-center justify-center transition-all">
+              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Twitter className="w-5 h-5 text-white" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-amber-500 flex items-center justify-center transition-all">
+              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Linkedin className="w-5 h-5 text-white" />
               </a>
             </div>
@@ -42,11 +42,11 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4 text-lg">Quick Links</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Our Fleet</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">About Us</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Testimonials</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">FAQ</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Blog</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Our Fleet</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">About Us</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Testimonials</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">FAQ</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Blog</a></li>
             </ul>
           </div>
           
@@ -54,11 +54,11 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4 text-lg">Services</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Luxury Rentals</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Wedding Cars</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Corporate Events</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Chauffeur Service</a></li>
-              <li><a href="#" className="text-gray-400 hover:text-amber-400 transition-colors">Long-term Lease</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Luxury Rentals</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Wedding Cars</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Corporate Events</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Chauffeur Service</a></li>
+              <li><a href="#" className="text-gray-400 hover:text-yellow-400 transition-colors">Long-term Lease</a></li>
             </ul>
           </div>
           
@@ -68,27 +68,27 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="text-gray-400">
                 <div className="flex items-center gap-3 mb-1">
-                  <Phone className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <Phone className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                   <span className="font-semibold text-white">CEO Emanuel</span>
                 </div>
-                <a href="tel:+17272245544" className="text-gray-400 hover:text-amber-400 transition-colors ml-8">
+                <a href="tel:+17272245544" className="text-gray-400 hover:text-yellow-400 transition-colors ml-8">
                   +1 (727) 224-5544
                 </a>
                 <p className="text-xs text-gray-500 ml-8">Italian, Spanish, English</p>
               </li>
               <li className="text-gray-400">
                 <div className="flex items-center gap-3 mb-1">
-                  <Phone className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <Phone className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                   <span className="font-semibold text-white">CEO Volis</span>
                 </div>
-                <a href="tel:+17279220141" className="text-gray-400 hover:text-amber-400 transition-colors ml-8">
+                <a href="tel:+17279220141" className="text-gray-400 hover:text-yellow-400 transition-colors ml-8">
                   +1 (727) 922-0141
                 </a>
                 <p className="text-xs text-gray-500 ml-8">Albanian, Greek, English</p>
               </li>
               <li className="flex items-start gap-3 text-gray-400">
-                <Mail className="w-5 h-5 text-amber-400 flex-shrink-0 mt-1" />
-                <a href="mailto:AdriaticBayExoticsLLC@gmail.com" className="hover:text-amber-400 transition-colors break-all">
+                <Mail className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-1" />
+                <a href="mailto:AdriaticBayExoticsLLC@gmail.com" className="hover:text-yellow-400 transition-colors break-all">
                   AdriaticBayExoticsLLC@gmail.com
                 </a>
               </li>
@@ -107,13 +107,13 @@ export default function Footer() {
             © 2026 Adriatic Bay Exotics. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors">
+            <a href="#" className="text-gray-500 hover:text-yellow-400 transition-colors">
               Privacy Policy
             </a>
-            <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors">
+            <a href="#" className="text-gray-500 hover:text-yellow-400 transition-colors">
               Terms of Service
             </a>
-            <a href="#" className="text-gray-500 hover:text-amber-400 transition-colors">
+            <a href="#" className="text-gray-500 hover:text-yellow-400 transition-colors">
               Cookie Policy
             </a>
           </div>

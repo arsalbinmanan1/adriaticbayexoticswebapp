@@ -57,12 +57,12 @@ export default function AboutPageContent() {
       <section className="pt-32 pb-16 bg-zinc-950">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 text-amber-400 border-amber-500/30">
+            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-yellow-500/10 text-yellow-400 border-yellow-500/30">
               Our Story
             </Badge>
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
               About{" "}
-              <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
                 Adriatic Bay Exotics
               </span>
             </h1>
@@ -77,7 +77,7 @@ export default function AboutPageContent() {
       <section className="py-16 bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-red-600 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-amber-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-yellow-500 rounded-full blur-3xl"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -86,17 +86,17 @@ export default function AboutPageContent() {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 Adriatic Bay
               </h2>
-              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent mb-6">
                 Exotics
               </h3>
             </div>
             
             <div className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-2xl p-8 md:p-12">
               <p className="text-gray-300 text-lg leading-relaxed mb-6">
-                <span className="text-amber-400 font-semibold">Adriatic Bay</span> represents the heritage and power of the Adriatic Sea, which connects Italy and Albania—the homelands of our owners.
+                <span className="text-yellow-400 font-semibold">Adriatic Bay</span> represents the heritage and power of the Adriatic Sea, which connects Italy and Albania—the homelands of our owners.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
-                The <span className="text-amber-400 font-semibold">"Bay"</span> perfectly captures our Florida spirit, evoking the sophistication of Monaco, Split, and Milan.
+                The <span className="text-yellow-400 font-semibold">"Bay"</span> perfectly captures our Florida spirit, evoking the sophistication of Monaco, Split, and Milan.
               </p>
             </div>
           </div>
@@ -138,8 +138,8 @@ export default function AboutPageContent() {
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent"></div>
                 </div>
                 {/* Decorative elements */}
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-red-600/20 to-amber-500/20 rounded-full blur-2xl"></div>
-                <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-red-600/20 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-red-600/20 to-yellow-500/20 rounded-full blur-2xl"></div>
+                <div className="absolute -top-6 -right-6 w-32 h-32 bg-gradient-to-br from-yellow-500/20 to-red-600/20 rounded-full blur-2xl"></div>
               </div>
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function AboutPageContent() {
             <p className="text-gray-400 text-lg">
               The principles that guide everything we do
             </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-amber-500 mx-auto mt-6"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-yellow-500 mx-auto mt-6"></div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -194,7 +194,7 @@ export default function AboutPageContent() {
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Why Choose{" "}
-                <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
                   Adriatic Bay Exotics
                 </span>
               </h2>

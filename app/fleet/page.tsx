@@ -45,7 +45,7 @@ export default function FleetPage() {
       <section className="pt-32 pb-16 bg-gradient-to-b from-zinc-900 to-zinc-950">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
-            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 text-amber-400 border-amber-500/30">
+            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-yellow-500/10 text-yellow-400 border-yellow-500/30">
               Premium Collection
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
@@ -70,7 +70,7 @@ export default function FleetPage() {
                 className={`rounded-full px-6 ${
                   selectedCategory === category.id
                     ? "bg-red-600 hover:bg-red-700 text-white"
-                    : "border-zinc-700 text-gray-400 hover:border-amber-500 hover:text-amber-400"
+                    : "border-zinc-700 text-gray-400 hover:border-yellow-500 hover:text-yellow-400"
                 }`}
               >
                 {category.label}
@@ -105,7 +105,7 @@ export default function FleetPage() {
 
                 <CardContent className="p-6">
                   <div className="mb-2">
-                    <span className="text-xs text-amber-400 font-semibold uppercase tracking-wider">
+                    <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">
                       {car.category}
                     </span>
                   </div>
@@ -124,8 +124,8 @@ export default function FleetPage() {
                   </div>
 
                   {car.pricing.specialOffer && (
-                    <div className="mb-4 p-2 bg-gradient-to-r from-red-600/20 to-amber-500/20 border border-amber-500/30 rounded-lg">
-                      <p className="text-amber-400 font-bold text-center text-xs">
+                    <div className="mb-4 p-2 bg-gradient-to-r from-red-600/20 to-yellow-500/20 border border-yellow-500/30 rounded-lg">
+                      <p className="text-yellow-400 font-bold text-center text-xs">
                         🎉 {car.pricing.specialOffer}
                       </p>
                     </div>
@@ -158,7 +158,7 @@ export default function FleetPage() {
                     <Link href={`/fleet/${car.slug}`} className="flex-1">
                       <Button
                         variant="outline"
-                        className="w-full border-amber-500 text-amber-400 hover:bg-amber-500/10 rounded-full"
+                        className="w-full border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 rounded-full"
                       >
                         View Details
                       </Button>

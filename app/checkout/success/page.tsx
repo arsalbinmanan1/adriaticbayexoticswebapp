@@ -45,17 +45,17 @@ function SuccessContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl text-left">
-            <Calendar className="w-8 h-8 text-amber-400 mb-4" />
+            <Calendar className="w-8 h-8 text-yellow-400 mb-4" />
             <h3 className="text-white font-bold mb-2">Check Your Email</h3>
             <p className="text-zinc-500 text-sm">We&apos;ve sent a confirmation and receipt to your inbox.</p>
           </div>
           <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl text-left">
-            <FileText className="w-8 h-8 text-amber-400 mb-4" />
+            <FileText className="w-8 h-8 text-yellow-400 mb-4" />
             <h3 className="text-white font-bold mb-2">Booking ID</h3>
             <p className="text-zinc-200 font-mono text-sm">{bookingId || 'N/A'}</p>
           </div>
           <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl text-left md:col-span-2 lg:col-span-1">
-            <Share2 className="w-8 h-8 text-amber-400 mb-4" />
+            <Share2 className="w-8 h-8 text-yellow-400 mb-4" />
             <h3 className="text-white font-bold mb-2">Share Experience</h3>
             <div className="flex gap-4 mt-2">
               <button className="text-zinc-500 hover:text-white transition-colors">Instagram</button>

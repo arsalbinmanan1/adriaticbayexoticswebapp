@@ -21,7 +21,7 @@ const prizes = [
   { id: 1, text: "5% Off", color: "from-blue-600 to-blue-700", isWin: true },
   { id: 2, text: "10% Off", color: "from-red-600 to-red-700", isWin: true },
   { id: 3, text: "Try Again", color: "from-zinc-700 to-zinc-800", isWin: false },
-  { id: 4, text: "15% Off", color: "from-amber-500 to-amber-600", isWin: true },
+  { id: 4, text: "15% Off", color: "from-yellow-500 to-yellow-600", isWin: true },
   { id: 5, text: "5% Off", color: "from-blue-600 to-blue-700", isWin: true },
   { id: 6, text: "10% Off", color: "from-red-600 to-red-700", isWin: true },
   { id: 7, text: "Try Again", color: "from-zinc-700 to-zinc-800", isWin: false },
@@ -29,7 +29,7 @@ const prizes = [
   { id: 9, text: "5% Off", color: "from-blue-600 to-blue-700", isWin: true },
   { id: 10, text: "10% Off", color: "from-red-600 to-red-700", isWin: true },
   { id: 11, text: "Try Again", color: "from-zinc-700 to-zinc-800", isWin: false },
-  { id: 12, text: "15% Off", color: "from-amber-500 to-amber-600", isWin: true },
+  { id: 12, text: "15% Off", color: "from-yellow-500 to-yellow-600", isWin: true },
 ];
 
 export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps) {
@@ -144,7 +144,7 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
         <CardContent className="p-6 md:p-8">
           {!hasSubmitted ? (
             <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Gift className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-3xl font-bold text-white mb-2">Spin to Win!</h2>
@@ -156,7 +156,7 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
                     {...register("fullName", { required: "Full name is required" })}
                     type="text"
                     placeholder="Full Name"
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500"
                   />
                   {errors.fullName && <p className="text-red-500 text-sm mt-1">{errors.fullName.message}</p>}
                 </div>
@@ -172,14 +172,14 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
                     })}
                     type="tel"
                     placeholder="Phone Number"
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
+                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-yellow-500"
                   />
                   {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber.message}</p>}
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-700 hover:to-amber-600 text-white font-bold py-3 rounded-lg"
+                  className="w-full bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white font-bold py-3 rounded-lg"
                 >
                   Continue to Spin
                 </Button>
@@ -256,19 +256,19 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
                       <Button
                         onClick={spinWheel}
                         disabled={isSpinning}
-                        className="bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-700 hover:to-amber-600 text-white font-bold py-4 px-8 rounded-full text-lg disabled:opacity-50 shadow-xl"
+                        className="bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600 text-white font-bold py-4 px-8 rounded-full text-lg disabled:opacity-50 shadow-xl"
                       >
                         {isSpinning ? "Spinning..." : "SPIN NOW!"}
                       </Button>
                     </div>
                   ) : (
                     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      <div className={`p-4 rounded-xl ${selectedPrize?.isWin ? "bg-gradient-to-br from-red-600/20 to-amber-500/20 border-2 border-amber-500" : "bg-zinc-800 border border-zinc-700"}`}>
+                      <div className={`p-4 rounded-xl ${selectedPrize?.isWin ? "bg-gradient-to-br from-red-600/20 to-yellow-500/20 border-2 border-yellow-500" : "bg-zinc-800 border border-zinc-700"}`}>
                         <h3 className="text-xl font-bold text-white mb-2">
                           {selectedPrize?.isWin ? "🎉 Congratulations!" : "Better Luck Next Time!"}
                         </h3>
                         <p className="text-base text-gray-300 mb-3">
-                          You won: <span className="font-bold text-amber-400">{selectedPrize?.text}</span>
+                          You won: <span className="font-bold text-yellow-400">{selectedPrize?.text}</span>
                         </p>
                         
                         {selectedPrize?.promoCode && (
@@ -297,12 +297,12 @@ export default function SpinWheelPopup({ isOpen, onClose }: SpinWheelPopupProps)
                             onClick={handleClose}
                             variant="outline"
                             size="sm"
-                            className="border-amber-500 text-amber-400 hover:bg-amber-500/10"
+                            className="border-yellow-500 text-yellow-400 hover:bg-yellow-500/10"
                           >
                             Close
                           </Button>
                           <a href="/fleet">
-                            <Button size="sm" className="bg-gradient-to-r from-red-600 to-amber-500 hover:from-red-700 hover:to-amber-600">
+                            <Button size="sm" className="bg-gradient-to-r from-red-600 to-yellow-500 hover:from-red-700 hover:to-yellow-600">
                               Book Now
                             </Button>
                           </a>

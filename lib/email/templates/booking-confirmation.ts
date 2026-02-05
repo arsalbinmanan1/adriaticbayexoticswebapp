@@ -348,10 +348,13 @@ export function generateBookingConfirmationEmail(details: BookingDetails): strin
                 Questions about your booking?
               </p>
               <p style="margin: 0; font-size: 16px; color: #ffffff; font-weight: bold;">
-                📞 Call us 24/7: <a href="tel:+17275550123" style="color: #fbbf24; text-decoration: none;">+1 (727) 555-0123</a>
+                📞 Call us 24/7: <a href="tel:+1 (727) 224-5544" style="color: #fbbf24; text-decoration: none;">+1 (727) 224-5544</a>
+              </p>
+              <p style="margin: 0; font-size: 16px; color: #ffffff; font-weight: bold;">
+                📞 Call us 24/7: <a href="tel:+17279220141" style="color: #fbbf24; text-decoration: none;">+1 (727) 922-0141</a>
               </p>
               <p style="margin: 10px 0 0; font-size: 16px; color: #ffffff; font-weight: bold;">
-                📧 Email: <a href="mailto:${customerEmail}" style="color: #fbbf24; text-decoration: none;">support@adriaticbayexotics.com</a>
+                📧 Email: <a href="mailto:${customerEmail}" style="color: #fbbf24; text-decoration: none;">adriaticbayexoticsllc@gmail.com</a>
               </p>
             </td>
           </tr>

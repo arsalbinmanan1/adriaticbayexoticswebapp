@@ -5,10 +5,10 @@ import { ArrowRight } from "lucide-react";
 
 export default function CTASection() {
   return (
-    <section id="contact" className="py-24 bg-gradient-to-br from-red-700 via-red-600 to-amber-600 relative overflow-hidden">
+    <section id="contact" className="py-24 bg-gradient-to-br from-red-700 via-red-600 to-red-600 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full opacity-10">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-amber-200 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 left-10 w-72 h-72 bg-yellow-200 rounded-full blur-3xl"></div>
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
       </div>
       
@@ -26,7 +26,7 @@ export default function CTASection() {
             <a href="/fleet">
               <Button 
                 size="lg" 
-                className="bg-white text-red-600 hover:bg-amber-50 px-8 py-6 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 group"
+                className="bg-white text-red-600 hover:bg-yellow-50 px-8 py-6 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 group"
               >
                 Book Your Experience
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -33,7 +33,7 @@ export default function FeaturesSection() {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             FULLY INSURED
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-amber-500 mx-auto"></div>
+          <div className="w-24 h-1 bg-gradient-to-r from-red-600 to-yellow-500 mx-auto"></div>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -45,8 +45,8 @@ export default function FeaturesSection() {
                 className="group p-6 rounded-2xl bg-zinc-800/50 border border-zinc-700 hover:border-red-600 transition-all duration-300 hover:transform hover:scale-105"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600/20 to-amber-500/20 flex items-center justify-center mb-4 group-hover:from-red-600/30 group-hover:to-amber-500/30 transition-colors">
-                  <Icon className="w-7 h-7 text-amber-400" />
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600/20 to-yellow-500/20 flex items-center justify-center mb-4 group-hover:from-red-600/30 group-hover:to-yellow-500/30 transition-colors">
+                  <Icon className="w-7 h-7 text-yellow-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">
                   {feature.title}

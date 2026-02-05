@@ -301,7 +301,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                 <CardContent className="p-8 space-y-8">
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                      <User className="w-6 h-6 text-amber-500" />
+                      <User className="w-6 h-6 text-yellow-500" />
                       Personal Information
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -323,7 +323,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
 
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                      <MapPin className="w-6 h-6 text-amber-500" />
+                      <MapPin className="w-6 h-6 text-yellow-500" />
                       Residential Address
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -347,7 +347,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
 
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                      <ShieldCheck className="w-6 h-6 text-amber-500" />
+                      <ShieldCheck className="w-6 h-6 text-yellow-500" />
                       Driver&apos;s License
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -379,7 +379,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                 <CardContent className="p-8 space-y-10">
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                      <Calendar className="w-6 h-6 text-amber-500" />
+                      <Calendar className="w-6 h-6 text-yellow-500" />
                       Rental Details
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -416,10 +416,10 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                             // If delivery is selected, we could set a fixed delivery fee
                           }}
                           className={`p-4 rounded-xl border-2 flex items-center justify-between cursor-pointer transition-all
-                            ${watchedFields.dropoffLocation === 'Delivery' ? 'bg-amber-500/10 border-amber-500' : 'bg-zinc-800 border-zinc-800'}`}
+                            ${watchedFields.dropoffLocation === 'Delivery' ? 'bg-yellow-500/10 border-yellow-500' : 'bg-zinc-800 border-zinc-800'}`}
                         >
                           <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center text-amber-500">
+                            <div className="w-10 h-10 rounded-full bg-zinc-700 flex items-center justify-center text-yellow-500">
                               <MapPin className="w-5 h-5" />
                             </div>
                             <div>
@@ -427,7 +427,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                               <p className="text-zinc-500 text-[10px] uppercase font-black">Professional delivery to your location (+$150)</p>
                             </div>
                           </div>
-                          <div className={`w-12 h-6 rounded-full relative transition-colors ${watchedFields.dropoffLocation === 'Delivery' ? 'bg-amber-500' : 'bg-zinc-700'}`}>
+                          <div className={`w-12 h-6 rounded-full relative transition-colors ${watchedFields.dropoffLocation === 'Delivery' ? 'bg-yellow-500' : 'bg-zinc-700'}`}>
                             <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${watchedFields.dropoffLocation === 'Delivery' ? 'left-7' : 'left-1'}`} />
                           </div>
                         </div>
@@ -438,7 +438,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
 
                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-                      <Plus className="w-6 h-6 text-amber-500" />
+                      <Plus className="w-6 h-6 text-yellow-500" />
                       Enhance Your Experience
                     </h2>
                     <div className="space-y-4">
@@ -606,7 +606,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
               <img src={car.images.gallery[0] || car.images.main} alt={car.name} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
               <div className="absolute bottom-4 left-6">
-                <p className="text-[10px] text-amber-400 font-black uppercase tracking-[0.2em]">{car.brand}</p>
+                <p className="text-[10px] text-yellow-400 font-black uppercase tracking-[0.2em]">{car.brand}</p>
                 <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase">{car.name}</h3>
               </div>
             </div>
@@ -659,7 +659,7 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                     <input 
                       {...register('promoCode')} 
                       className={`flex-1 bg-zinc-800 text-white px-4 py-2 rounded-lg text-xs outline-none transition-all placeholder:text-zinc-600
-                        ${appliedPromo ? 'border-2 border-green-500/50' : errors.promoCode ? 'border-2 border-red-500/50' : 'border border-zinc-700 focus:ring-1 focus:ring-amber-500'}`}
+                        ${appliedPromo ? 'border-2 border-green-500/50' : errors.promoCode ? 'border-2 border-red-500/50' : 'border border-zinc-700 focus:ring-1 focus:ring-yellow-500'}`}
                       placeholder="ENTER CODE"
                       disabled={!!appliedPromo}
                     />
@@ -760,7 +760,7 @@ function BadgeItem({ text }: { text: string }) {
 function ReviewSection({ title, children, icon }: { title: string, children: React.ReactNode, icon: React.ReactNode }) {
   return (
     <div className="space-y-2 pb-4 border-b border-zinc-800 last:border-0">
-      <div className="flex items-center gap-2 text-amber-500">
+      <div className="flex items-center gap-2 text-yellow-500">
         {icon}
         <h4 className="text-[10px] font-black uppercase tracking-widest">{title}</h4>
       </div>

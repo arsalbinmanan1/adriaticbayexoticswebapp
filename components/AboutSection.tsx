@@ -7,18 +7,18 @@ export default function AboutSection() {
     <section id="about" className="py-24 bg-zinc-900 relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 text-amber-400 border-amber-500/30">
+            <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-yellow-500/10 text-yellow-400 border-yellow-500/30">
               About Us
             </Badge>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
               REDEFINING LUXURY
               <br />
-              <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
                 CAR RENTALS
               </span>
             </h2>
@@ -33,15 +33,15 @@ export default function AboutSection() {
             
             <div className="grid grid-cols-3 gap-6 mb-8">
               <div className="text-center">
-                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent mb-2">500+</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent mb-2">50+</div>
                 <div className="text-sm text-gray-500">Rentals</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent mb-2">50+</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent mb-2">5+</div>
                 <div className="text-sm text-gray-500">Vehicles</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent mb-2">4.9</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent mb-2">4.9</div>
                 <div className="text-sm text-gray-500">Rating</div>
               </div>
             </div>

@@ -14,9 +14,9 @@ export default function ContactPage() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-red-700 via-red-600 to-amber-600">
+      <section className="relative py-20 bg-gradient-to-br from-red-700 via-red-600 to-red-600">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-amber-200 rounded-full blur-3xl"></div>
+          <div className="absolute top-10 left-10 w-72 h-72 bg-yellow-200 rounded-full blur-3xl"></div>
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
         </div>
         
@@ -51,14 +51,14 @@ export default function ContactPage() {
               {/* CEO Emanuel */}
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center flex-shrink-0">
                     <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-lg mb-1">CEO Emanuel</h3>
                     <a
                       href="tel:+17272245544"
-                      className="text-amber-400 hover:text-amber-300 text-lg font-semibold transition-colors"
+                      className="text-yellow-400 hover:text-yellow-300 text-lg font-semibold transition-colors"
                     >
                       +1 (727) 224-5544
                     </a>
@@ -70,14 +70,14 @@ export default function ContactPage() {
               {/* CEO Volis */}
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center flex-shrink-0">
                     <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-lg mb-1">CEO Volis</h3>
                     <a
                       href="tel:+17279220141"
-                      className="text-amber-400 hover:text-amber-300 text-lg font-semibold transition-colors"
+                      className="text-yellow-400 hover:text-yellow-300 text-lg font-semibold transition-colors"
                     >
                       +1 (727) 922-0141
                     </a>
@@ -89,14 +89,14 @@ export default function ContactPage() {
               {/* Email */}
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center flex-shrink-0">
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-lg mb-1">Email Us</h3>
                     <a
                       href="mailto:AdriaticBayExoticsLLC@gmail.com"
-                      className="text-amber-400 hover:text-amber-300 transition-colors break-all"
+                      className="text-yellow-400 hover:text-yellow-300 transition-colors break-all"
                     >
                       AdriaticBayExoticsLLC@gmail.com
                     </a>
@@ -107,7 +107,7 @@ export default function ContactPage() {
               {/* Business Hours */}
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center flex-shrink-0">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -122,7 +122,7 @@ export default function ContactPage() {
               {/* Location */}
               <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-6">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-600 to-yellow-500 flex items-center justify-center flex-shrink-0">
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
                   <div>

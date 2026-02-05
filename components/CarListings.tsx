@@ -28,7 +28,7 @@ export default function CarListings() {
     <section id="fleet" className="py-24 bg-zinc-950">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-amber-500/10 text-amber-400 border-amber-500/30">
+          <Badge className="mb-4 bg-gradient-to-r from-red-600/10 to-yellow-500/10 text-yellow-400 border-yellow-500/30">
             New Arrivals
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
@@ -67,7 +67,7 @@ export default function CarListings() {
               
               <CardContent className="p-6">
                 <div className="mb-2">
-                  <span className="text-xs text-amber-400 font-semibold uppercase tracking-wider">
+                  <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">
                     {car.category}
                   </span>
                 </div>
@@ -78,7 +78,7 @@ export default function CarListings() {
                 
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     <span className="text-sm text-gray-300 font-semibold">
                       {car.year}
                     </span>
@@ -95,7 +95,7 @@ export default function CarListings() {
                   <Link href={`/fleet/${car.slug}`} className="flex-1">
                     <Button 
                       variant="outline"
-                      className="w-full border-amber-500 text-amber-400 hover:bg-amber-500/10 font-semibold rounded-full"
+                      className="w-full border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 font-semibold rounded-full"
                     >
                       Details
                     </Button>
@@ -117,7 +117,7 @@ export default function CarListings() {
             <Button
               variant="outline"
               size="lg"
-              className="border-2 border-amber-500 text-amber-400 hover:bg-amber-500/10 px-8 rounded-full"
+              className="border-2 border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 px-8 rounded-full"
             >
               View Complete Collection
             </Button>

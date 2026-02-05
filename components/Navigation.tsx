@@ -53,7 +53,7 @@ export default function Navigation() {
               <a
                 key={link.name}
                 href={link.href}
-                className="text-gray-300 hover:text-amber-400 transition-colors font-medium"
+                className="text-gray-300 hover:text-yellow-400 transition-colors font-medium"
               >
                 {link.name}
               </a>

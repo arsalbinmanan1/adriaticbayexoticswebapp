@@ -13,7 +13,7 @@ export default function Hero() {
       <div className="relative z-10 container mx-auto px-4 py-20 text-center">
         <div className="animate-fadeInUp">
           <div className="inline-block mb-4">
-            <span className="text-amber-400 text-sm font-semibold tracking-[0.3em] uppercase">
+            <span className="text-yellow-400 text-sm font-semibold tracking-[0.3em] uppercase">
               Luxury Exotics
             </span>
           </div>
@@ -21,7 +21,7 @@ export default function Hero() {
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight">
             ADRIATIC BAY EXOTICS
             <br />
-            <span className="bg-gradient-to-r from-red-600 to-amber-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
               EXPERIENCE
             </span>
           </h1>
@@ -44,7 +44,7 @@ export default function Hero() {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-amber-500 text-amber-400 hover:bg-amber-500/10 px-8 py-6 text-lg font-semibold rounded-full transition-all duration-300"
+                className="border-2 border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 px-8 py-6 text-lg font-semibold rounded-full transition-all duration-300"
               >
                 Learn More
               </Button>
@@ -55,7 +55,7 @@ export default function Hero() {
       
       {/* Scroll indicator */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-        <ChevronDown className="w-8 h-8 text-amber-400" />
+        <ChevronDown className="w-8 h-8 text-yellow-400" />
       </div>
     </section>
   );
