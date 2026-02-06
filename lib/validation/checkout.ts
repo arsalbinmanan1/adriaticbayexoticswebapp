@@ -7,8 +7,8 @@ export const checkoutSchema = z.object({
     customerPhone: z.string().min(10, "Invalid phone number"),
     customerDob: z.string().refine((dob) => {
         const age = (new Date().getTime() - new Date(dob).getTime()) / (1000 * 60 * 60 * 24 * 365)
-        return age >= 21
-    }, "You must be at least 21 years old"),
+        return age >= 18
+    }, "You must be at least 18 years old"),
 
     // Address
     customerAddressStreet: z.string().min(5, "Street address is required"),

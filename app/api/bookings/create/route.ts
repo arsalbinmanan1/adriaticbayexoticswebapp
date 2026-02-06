@@ -94,8 +94,8 @@ export async function POST(request: Request) {
         if (body.customerDob) {
             const dob = new Date(body.customerDob)
             const age = new Date().getFullYear() - dob.getFullYear()
-            if (age < 21) {
-                return NextResponse.json({ error: 'You must be at least 21 years old to rent a vehicle.' }, { status: 400 })
+            if (age < 18) {
+                return NextResponse.json({ error: 'You must be at least 18 years old to rent a vehicle.' }, { status: 400 })
             }
         }
 

@@ -57,7 +57,7 @@ export default function AboutSection() {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=800&auto=format&fit=crop"
+                src="/landingpage.jpeg"
                 alt="Luxury Car"
                 className="w-full h-[600px] object-cover"
               />

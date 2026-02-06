@@ -14,18 +14,18 @@ export default function ContactPage() {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative py-20 bg-gradient-to-br from-red-700 via-red-600 to-red-600">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-yellow-200 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+      <section className="relative py-20 bg-black border-t border-zinc-800">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-red-600 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-yellow-500 rounded-full blur-3xl"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h1 className="text-5xl md:text-6xl font-bold text-red-600 mb-6">
               Get in Touch
             </h1>
-            <p className="text-xl text-white/90 leading-relaxed">
+            <p className="text-xl text-red-500/90 leading-relaxed">
               Ready to experience luxury? Contact us today and let's make your dream drive a reality.
             </p>
           </div>

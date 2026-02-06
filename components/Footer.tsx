@@ -23,10 +23,10 @@ export default function Footer() {
               Experience the ultimate in luxury car rentals. Drive your dreams.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
+              <a href="https://www.facebook.com/people/Adriatic-Bay-Exotics/61585955143424/" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Facebook className="w-5 h-5 text-white" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
+              <a href="https://www.instagram.com/adriaticbayexotics" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">
                 <Instagram className="w-5 h-5 text-white" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-zinc-800 hover:bg-gradient-to-r hover:from-red-600 hover:to-yellow-500 flex items-center justify-center transition-all">

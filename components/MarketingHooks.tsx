@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
-import SpinWheelPopup from "./SpinWheelPopup";
+import DiscountPopup from "./DiscountPopup";
 import ValentinesPopup from "./ValentinesPopup";
 import MarketingBanner from "./MarketingBanner";
 
@@ -130,7 +130,7 @@ export default function MarketingHooks() {
           onOpenValentines={handleOpenValentines}
         />
       )}
-      <SpinWheelPopup isOpen={showSpinWheel} onClose={handleCloseSpinWheel} />
+      <DiscountPopup isOpen={showSpinWheel} onClose={handleCloseSpinWheel} />
       <ValentinesPopup isOpen={showValentines} onClose={handleCloseValentines} />
     </>
   );

@@ -24,7 +24,7 @@ export default function BrandLogos() {
               className="text-center opacity-60 hover:opacity-100 transition-all duration-300 hover:scale-110"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="mb-2 grayscale hover:grayscale-0 transition-all flex items-center justify-center h-20">
+              <div className="mb-2 grayscale hover:grayscale-0 transition-all flex items-center justify-center h-20 hover:ring-2 hover:ring-gray-400 rounded-lg p-4">
                 <Image
                   src={brand.icon}
                   alt={`${brand.name} logo`}

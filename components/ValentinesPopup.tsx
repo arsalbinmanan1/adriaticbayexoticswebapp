@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, Heart, Copy, Check } from "lucide-react";
+import { X, Heart } from "lucide-react";
 import Link from "next/link";
 
 interface ValentinesPopupProps {
@@ -11,23 +10,15 @@ interface ValentinesPopupProps {
   onClose: () => void;
 }
 
-const PROMO_CODE = "VALENTINE2026";
+const PROMO_CODE = "RENT2GET1FREE";
 
 export default function ValentinesPopup({ isOpen, onClose }: ValentinesPopupProps) {
-  const [copied, setCopied] = useState(false);
-
   if (!isOpen) return null;
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(PROMO_CODE);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   const featuredCars = [
-    { name: "Corvette C8-R", slug: "corvette-c8-r", price: "$419" },
-    { name: "McLaren 570S", slug: "mclaren-570s", price: "$1,199" },
-    { name: "Maserati Levante", slug: "maserati-levante", price: "$199" },
+    { name: "Corvette C8-R", slug: "corvette-c8-r", price: "$419/day" },
+    { name: "McLaren 570S", slug: "mclaren-570s", price: "$1,199/day" },
+    { name: "Maserati Levante", slug: "maserati-levante", price: "$199/day" },
   ];
 
   return (
@@ -50,15 +41,16 @@ export default function ValentinesPopup({ isOpen, onClose }: ValentinesPopupProp
         ))}
       </div>
 
-      <Card className="relative bg-gradient-to-br from-red-900/95 via-pink-900/95 to-red-900/95 border-red-600 max-w-md w-full my-4 shadow-2xl overflow-hidden backdrop-blur-xl">
+      <Card className="relative bg-gradient-to-br from-red-900/95 via-pink-900/95 to-red-900/95 border-red-600 max-w-2xl w-full my-4 shadow-2xl overflow-hidden backdrop-blur-xl">
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors z-10"
+          className="absolute top-3 right-3 text-white/80 hover:text-white transition-colors z-10 bg-white/10 rounded-full p-1 hover:bg-white/20"
         >
           <X className="w-4 h-4" />
         </button>
 
         <CardContent className="p-4 md:p-5">
+          {/* Header */}
           <div className="text-center mb-4">
             <div className="relative inline-block mb-2">
               <Heart
@@ -70,38 +62,63 @@ export default function ValentinesPopup({ isOpen, onClose }: ValentinesPopupProp
               </div>
             </div>
 
-            <h2 className="text-xl md:text-2xl font-bold text-white mb-2">Valentine's Special</h2>
-            <div className="inline-block bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1 rounded-full mb-2">
-              <p className="text-base md:text-lg font-bold text-white">20% OFF</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Valentine's Special</h2>
+            <div className="inline-block bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full mb-2">
+              <p className="text-base md:text-lg font-bold text-white">Buy 2 Days, Get 1 FREE</p>
             </div>
-            <p className="text-pink-100 text-sm">Use code or click "Book Now"</p>
+            <p className="text-pink-100 text-sm">Make this Valentine's unforgettable!</p>
           </div>
 
-          {/* Promo Code Display */}
-          <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-3 text-center group cursor-pointer hover:bg-white/10 transition-colors" onClick={copyToClipboard}>
-            <p className="text-pink-200 text-[10px] uppercase tracking-widest mb-1">Promo Code</p>
-            <div className="flex items-center justify-center gap-2">
-              <code className="text-xl md:text-2xl font-mono font-bold text-white tracking-wider">
-                {PROMO_CODE}
-              </code>
-              {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4 text-white/50 group-hover:text-white transition-colors" />}
-            </div>
-          </div>
-
-
-          <div className="flex gap-2 justify-center">
-            <Link href={`/fleet?promo=${PROMO_CODE}`} className="flex-1">
-              <Button
-                onClick={onClose}
-                className="bg-white text-red-600 hover:bg-pink-100 font-bold px-4 py-2 rounded-full w-full text-sm"
+          {/* Featured Cars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            {featuredCars.map((car) => (
+              <div
+                key={car.slug}
+                className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-3 hover:bg-white/15 transition-all"
               >
-                Book Now & Save
-              </Button>
-            </Link>
+                <h3 className="text-white font-bold text-sm mb-1">{car.name}</h3>
+                <p className="text-white text-lg font-bold mb-2">{car.price}</p>
+                <Link href={`/checkout/${car.slug}?promo=${PROMO_CODE}`} onClick={onClose}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full bg-white/90 text-red-700 hover:bg-white hover:text-red-800 border-0 font-semibold text-xs"
+                  >
+                    Book Now
+                  </Button>
+                </Link>
+              </div>
+            ))}
           </div>
-          <p className="text-white/40 text-[8px] text-center mt-3">
-            * Valid Feb 10-17, 2026. Cannot be combined with other offers.
-          </p>
+
+          {/* Bottom Section */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-3">
+            <p className="text-white text-xs text-center mb-2">
+              <span className="text-pink-200 font-semibold">Limited time only</span> • Subject to availability
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <Link href="/fleet" onClick={onClose}>
+                <Button
+                  size="sm"
+                  className="bg-white text-red-600 hover:bg-pink-100 font-bold px-4 py-2 rounded-full text-sm w-full sm:w-auto"
+                >
+                  Explore Fleet
+                </Button>
+              </Link>
+              <a href="tel:+17272245544">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent text-white hover:bg-white/10 border-2 border-white font-bold px-4 py-2 rounded-full text-sm w-full sm:w-auto"
+                >
+                  Call to Book
+                </Button>
+              </a>
+            </div>
+            <p className="text-white/60 text-[10px] text-center mt-2">
+              * Cannot be combined with other offers
+            </p>
+          </div>
         </CardContent>
       </Card>
 

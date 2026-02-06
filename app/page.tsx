@@ -7,6 +7,7 @@ import AboutSection from "@/components/AboutSection";
 import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import PaymentMethodsBanner from "@/components/PaymentMethodsBanner";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Testimonials />
       <CTASection />
       <Footer />
+      <PaymentMethodsBanner />
     </main>
   );
 }

@@ -18,13 +18,13 @@ export default function Hero() {
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 tracking-tight">
-            ADRIATIC BAY EXOTICS
-            <br />
-            <span className="bg-gradient-to-r from-red-600 to-yellow-500 bg-clip-text text-transparent">
-              EXPERIENCE
-            </span>
-          </h1>
+          <div className="mb-6">
+            <img 
+              src="/adriaticlogo.png" 
+              alt="Adriatic Bay Exotics" 
+              className="h-32 md:h-40 lg:h-70 w-auto mx-auto"
+            />
+          </div>
           
           <p className="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto mb-8 leading-relaxed">
             Unleash the thrill of driving world-class luxury vehicles. Experience unparalleled elegance,

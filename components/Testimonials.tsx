@@ -8,14 +8,14 @@ export default function Testimonials() {
     {
       name: "James Anderson",
       role: "Business Executive",
-      content: "An absolutely phenomenal experience from start to finish. The Lamborghini Urus was immaculate, and the service was impeccable. This is the only place I'll rent luxury vehicles from now on.",
+      content: "An absolutely phenomenal experience from start to finish. The Chevrolet Corvette C8-R was immaculate, and the service was impeccable. This is the only place I'll rent luxury vehicles from now on.",
       rating: 5,
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop",
     },
     {
       name: "Sarah Mitchell",
       role: "Wedding Planner",
-      content: "We rented a Rolls-Royce for our premium wedding package. The vehicle was pristine, delivered on time, and truly made our client's day unforgettable. Highly professional team!",
+      content: "We rented a McLaren 570S Spyder for our premium wedding package. The vehicle was pristine, delivered on time, and truly made our client's day unforgettable. Highly professional team!",
       rating: 5,
       avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop",
     },

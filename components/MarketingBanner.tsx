@@ -76,7 +76,7 @@ export default function MarketingBanner({ campaign, onOpenSpinWheel, onOpenValen
             className="bg-amber-500 text-white border-none hover:bg-amber-600 h-8 px-3 sm:px-4 rounded-full font-bold text-xs transition-all hover:scale-105"
           >
             <Sparkles className="w-3.5 h-3.5 mr-1" />
-            <span className="hidden sm:inline">Spin Wheel</span>
+            <span className="hidden sm:inline">7% flat discount</span>
             <span className="sm:hidden">Spin</span>
           </Button>
         )}

@@ -6,11 +6,16 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 
 export default async function CheckoutPage({ 
-  params 
+  params,
+  searchParams 
 }: { 
-  params: Promise<{ slug: string }> 
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { slug } = await params;
+  const search = await searchParams;
+  const promoCode = typeof search.promo === 'string' ? search.promo : undefined;
+  
   const car = await getCarBySlug(slug);
 
   if (!car) {
@@ -41,7 +46,7 @@ export default async function CheckoutPage({
 
 
       <div className="bg-zinc-950">
-        <CheckoutContent car={car} />
+        <CheckoutContent car={car} initialPromoCode={promoCode} />
       </div>
 
       <Footer />

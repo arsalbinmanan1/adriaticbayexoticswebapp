@@ -80,6 +80,7 @@ export function mapDbCarToInterface(dbCar: DbCar) {
 
 /**
  * Fetches all active cars from the database.
+ * Orders: Corvette C8-R, McLaren 570S, Maserati Levante first, then others by price.
  */
 export async function getAllCars() {
     const supabase = createClient()
@@ -88,14 +89,29 @@ export async function getAllCars() {
         .select('*')
         .is('deleted_at', null)
         .in('status', ['available', 'booked'])
-        .order('daily_rate', { ascending: false })
 
     if (error) {
         console.error('Error fetching cars:', error)
         return []
     }
 
-    return (data as DbCar[]).map(mapDbCarToInterface)
+    // Custom ordering: Corvette, McLaren 570S, Maserati first
+    const priorityOrder = ['corvette-c8-r', 'mclaren-570s', 'maserati-levante']
+    const sortedData = (data as DbCar[]).sort((a, b) => {
+        const aIndex = priorityOrder.indexOf(a.slug)
+        const bIndex = priorityOrder.indexOf(b.slug)
+        
+        // If both are in priority list, sort by priority
+        if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex
+        // If only a is in priority list, it comes first
+        if (aIndex !== -1) return -1
+        // If only b is in priority list, it comes first
+        if (bIndex !== -1) return 1
+        // Otherwise, sort by price descending
+        return b.daily_rate - a.daily_rate
+    })
+
+    return sortedData.map(mapDbCarToInterface)
 }
 
 /**

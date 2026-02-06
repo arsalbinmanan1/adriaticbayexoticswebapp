@@ -30,17 +30,17 @@ export default function AboutPageContent() {
 
   const stats = [
     {
-      value: "50+",
+      value: "5+",
       label: "Exotic Vehicles",
       icon: TrendingUp,
     },
     {
-      value: "10K+",
+      value: "100+",
       label: "Happy Clients",
       icon: Users,
     },
     {
-      value: "15+",
+      value: "3+",
       label: "Years Experience",
       icon: Award,
     },
@@ -131,7 +131,7 @@ export default function AboutPageContent() {
               <div className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img
-                    src="https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=800&auto=format&fit=crop"
+                    src="/landingpage.jpeg"
                     alt="Luxury Supercar"
                     className="w-full h-[600px] object-cover"
                   />

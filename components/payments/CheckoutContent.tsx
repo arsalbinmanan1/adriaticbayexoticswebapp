@@ -29,11 +29,12 @@ import Swal from 'sweetalert2'
 
 interface CheckoutContentProps {
   car: Car
+  initialPromoCode?: string
 }
 
 const STEPS = ['Information', 'Add-ons', 'Review', 'Payment']
 
-export default function CheckoutContent({ car }: CheckoutContentProps) {
+export default function CheckoutContent({ car, initialPromoCode }: CheckoutContentProps) {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -96,6 +97,18 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
     })
     return () => subscription.unsubscribe()
   }, [watch])
+
+  // --- Auto-apply promo code from URL ---
+  useEffect(() => {
+    if (initialPromoCode && !appliedPromo) {
+      setValue('promoCode', initialPromoCode)
+      // Auto-apply the promo code after a short delay to ensure form is ready
+      const timer = setTimeout(() => {
+        applyPromoCode()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [initialPromoCode, appliedPromo, setValue])
 
   // --- Calculations ---
   const calculatePricing = () => {
@@ -395,6 +408,10 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                           <option>Orlando, FL</option>
                           <option>Miami, FL</option>
                           <option>Tampa, FL</option>
+                          <option>St Petersburg, FL</option>
+                          <option>Clearwater, FL</option>
+                          <option>New Port Richey, FL</option>
+                          <option>Sarasota, FL</option>
                         </select>
                       </FormGroup>
                       <FormGroup label="Dropoff Location" error={errors.dropoffLocation?.message}>
@@ -402,6 +419,10 @@ export default function CheckoutContent({ car }: CheckoutContentProps) {
                           <option>Orlando, FL</option>
                           <option>Miami, FL</option>
                           <option>Tampa, FL</option>
+                          <option>St Petersburg, FL</option>
+                          <option>Clearwater, FL</option>
+                          <option>New Port Richey, FL</option>
+                          <option>Sarasota, FL</option>
                         </select>
                       </FormGroup>
 
