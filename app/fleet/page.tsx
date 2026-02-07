@@ -155,7 +155,7 @@ export default function FleetPage() {
                   </div>
 
                   <div className="flex gap-3">
-                    <Link href={`/fleet/${car.slug}`} className="flex-1">
+                    <Link href={`/fleet/${car.slug}`} className="flex-1" scroll={true}>
                       <Button
                         variant="outline"
                         className="w-full border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 rounded-full"
@@ -163,7 +163,7 @@ export default function FleetPage() {
                         View Details
                       </Button>
                     </Link>
-                    <Link href={`/fleet/${car.slug}#book`} className="flex-1">
+                    <Link href={`/checkout/${car.slug}`} className="flex-1" scroll={true}>
                       <Button className="w-full bg-red-600 hover:bg-red-700 text-white rounded-full">
                         Book Now
                       </Button>

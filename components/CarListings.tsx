@@ -92,7 +92,7 @@ export default function CarListings() {
                 </div>
                 
                 <div className="flex gap-2">
-                  <Link href={`/fleet/${car.slug}`} className="flex-1">
+                  <Link href={`/fleet/${car.slug}`} className="flex-1" scroll={true}>
                     <Button 
                       variant="outline"
                       className="w-full border-yellow-500 text-yellow-400 hover:bg-yellow-500/10 font-semibold rounded-full"
@@ -100,7 +100,7 @@ export default function CarListings() {
                       Details
                     </Button>
                   </Link>
-                  <Link href={`/checkout/${car.slug}`} className="flex-1">
+                  <Link href={`/checkout/${car.slug}`} className="flex-1" scroll={true}>
                     <Button className="w-full bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full">
                       Book Now
                     </Button>

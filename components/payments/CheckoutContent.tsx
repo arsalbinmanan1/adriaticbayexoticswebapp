@@ -444,7 +444,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                               <MapPin className="w-5 h-5" />
                             </div>
                             <div>
-                              <p className="text-white font-bold text-sm">VIP Doorstep Delivery</p>
+                              <p className="text-white font-bold text-sm">Delivery within 50 miles radius</p>
                               <p className="text-zinc-500 text-[10px] uppercase font-black">Professional delivery to your location (+$150)</p>
                             </div>
                           </div>

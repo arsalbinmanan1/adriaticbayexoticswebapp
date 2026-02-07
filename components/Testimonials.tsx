@@ -22,7 +22,7 @@ export default function Testimonials() {
     {
       name: "Michael Chen",
       role: "Entrepreneur",
-      content: "The attention to detail is unmatched. From the seamless booking process to the personalized delivery, everything exceeded expectations. The Ferrari was an absolute dream to drive.",
+      content: "The attention to detail is unmatched. From the seamless booking process to the personalized delivery, everything exceeded expectations. The Lamborghini Huracan Spyder LP 580 was an absolute dream to drive.",
       rating: 5,
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop",
     },
