@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSession } from "@/lib/auth";
 
@@ -73,6 +74,10 @@ export async function POST(request: Request) {
             .single();
 
         if (error) throw error;
+        
+        // Invalidate the cache for the promo codes page
+        revalidatePath("/admin/promo-codes");
+        
         return NextResponse.json(data);
     } catch (error: any) {
         console.error("Error creating promo code:", error);

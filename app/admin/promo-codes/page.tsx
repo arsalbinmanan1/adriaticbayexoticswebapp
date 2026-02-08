@@ -14,6 +14,10 @@ import { format } from "date-fns";
 import { PromoDialog } from "@/components/admin/PromoDialog";
 import { DeletePromoButton } from "@/components/admin/DeletePromoButton";
 
+// Force dynamic rendering to prevent caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function PromoCodesPage() {
   const supabase = createAdminClient();
   

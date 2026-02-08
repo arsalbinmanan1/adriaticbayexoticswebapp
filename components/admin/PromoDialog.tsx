@@ -58,6 +58,7 @@ export function PromoDialog({ promo, trigger }: PromoDialogProps) {
 
       if (res.ok) {
         setOpen(false);
+        // Refresh the router to re-fetch server components
         router.refresh();
       } else {
         const data = await res.json();

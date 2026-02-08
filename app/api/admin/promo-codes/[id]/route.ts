@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSession } from "@/lib/auth";
 
@@ -56,6 +57,10 @@ export async function PATCH(
             .single();
 
         if (error) throw error;
+        
+        // Invalidate the cache for the promo codes page
+        revalidatePath("/admin/promo-codes");
+        
         return NextResponse.json(data);
     } catch (error: any) {
         console.error("Error updating promo code:", error);
@@ -83,6 +88,10 @@ export async function DELETE(
             .eq("id", id);
 
         if (error) throw error;
+        
+        // Invalidate the cache for the promo codes page
+        revalidatePath("/admin/promo-codes");
+        
         return NextResponse.json({ success: true });
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 });
