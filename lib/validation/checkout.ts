@@ -17,10 +17,10 @@ export const checkoutSchema = z.object({
     customerAddressZip: z.string().min(5, "Invalid ZIP code"),
 
     // License
-    licenseNumber: z.string().min(5, "License number is required"),
-    licenseState: z.string().min(2, "License state is required"),
-    licenseExpiration: z.string().refine((val) => new Date(val) > new Date(), "License must be valid"),
-
+    //licenseNumber: z.string().min(5, "License number is required"),
+    //licenseState: z.string().min(2, "License state is required"),
+    //licenseExpiration: z.string().refine((val) => new Date(val) > new Date(), "License must be valid"),
+ 
     // Additional Driver
     hasAdditionalDriver: z.boolean().default(false),
     additionalDriverName: z.string().optional(),

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Edit, Trash2, Tag } from "lucide-react";
 import { format } from "date-fns";
 import { PromoDialog } from "@/components/admin/PromoDialog";
+import { DeletePromoButton } from "@/components/admin/DeletePromoButton";
 
 export default async function PromoCodesPage() {
   const supabase = createAdminClient();
@@ -90,9 +91,7 @@ export default async function PromoCodesPage() {
                             <Edit className="h-4 w-4" />
                           </Button>
                         } />
-                        <Button variant="ghost" size="icon" className="hover:text-red-500 hover:bg-red-500/10">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <DeletePromoButton promoId={promo.id} promoCode={promo.code} />
                      </div>
                   </TableCell>
                 </TableRow>

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Car as CarIcon } from "lucide-react";
+import { DeleteCarButton } from "@/components/admin/DeleteCarButton";
 import Image from "next/image";
 
 export default async function CarsPage() {
@@ -104,9 +105,7 @@ export default async function CarsPage() {
                         <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
-                    <Button variant="ghost" size="icon" className="text-neutral-400 hover:text-red-500 hover:bg-red-500/10">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <DeleteCarButton carId={car.id} carName={`${car.make} ${car.model}`} />
                   </div>
                 </TableCell>
               </TableRow>

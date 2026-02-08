@@ -146,8 +146,8 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
     if (step === 1) {
       fieldsToValidate = [
         'customerName', 'customerEmail', 'customerPhone', 'customerDob',
-        'customerAddressStreet', 'customerAddressCity', 'customerAddressState', 'customerAddressZip',
-        'licenseNumber', 'licenseState', 'licenseExpiration'
+        'customerAddressStreet', 'customerAddressCity', 'customerAddressState', 'customerAddressZip'
+        //'licenseNumber', 'licenseState', 'licenseExpiration'
       ]
     } else if (step === 2) {
       fieldsToValidate = ['pickupDatetime', 'dropoffDatetime', 'pickupLocation', 'dropoffLocation']
@@ -358,7 +358,9 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                     </div>
                   </div>
 
-                  <div>
+                  {/* disabled for now */}
+                  {/*
+                   <div>
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                       <ShieldCheck className="w-6 h-6 text-yellow-500" />
                       Driver&apos;s License
@@ -376,7 +378,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
                     </div>
                   </div>
-
+                  */}
                   <div className="flex justify-end pt-4">
                     <Button type="button" onClick={nextStep} className={actionButtonStyles}>
                       Rental Details <ChevronRight className="w-5 h-5 ml-2" />

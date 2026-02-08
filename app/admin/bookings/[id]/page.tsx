@@ -18,6 +18,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 import { StatusUpdater } from "@/components/admin/StatusUpdater";
+import { DeleteBookingButton } from "@/components/admin/DeleteBookingButton";
 
 export default async function BookingDetailsPage({
   params,
@@ -65,6 +66,7 @@ export default async function BookingDetailsPage({
            <Button variant="outline" className="border-neutral-800 text-white hover:bg-neutral-900">
              Print Receipt
            </Button>
+           <DeleteBookingButton bookingId={booking.id} bookingRef={booking.id.slice(0, 8).toUpperCase()} />
         </div>
       </div>
 
