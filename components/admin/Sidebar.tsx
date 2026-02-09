@@ -27,7 +27,6 @@ const navItems = [
   { label: "Fleet", icon: Car, href: "/admin/cars" },
   { label: "Customers", icon: Users, href: "/admin/customers" },
   { label: "Promo Codes", icon: Tag, href: "/admin/promo-codes" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
 ];
 
 const NavContent = ({ collapsed, pathname }: { collapsed: boolean; pathname: string }) => (

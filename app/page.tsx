@@ -4,7 +4,6 @@ import BrandLogos from "@/components/BrandLogos";
 import FeaturesSection from "@/components/FeaturesSection";
 import CarListings from "@/components/CarListings";
 import AboutSection from "@/components/AboutSection";
-import Testimonials from "@/components/Testimonials";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import PaymentMethodsBanner from "@/components/PaymentMethodsBanner";
@@ -18,7 +17,6 @@ export default function Home() {
       <FeaturesSection />
       <CarListings />
       <AboutSection />
-      <Testimonials />
       <CTASection />
       <Footer />
       <PaymentMethodsBanner />

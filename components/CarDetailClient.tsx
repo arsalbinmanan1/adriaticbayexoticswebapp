@@ -9,7 +9,7 @@ import Footer from "@/components/Footer";
 import { Car } from "@/lib/cars-data";
 import Link from "next/link";
 import {
-
+  
   Phone,
   Mail,
   CheckCircle2,
@@ -22,6 +22,7 @@ import {
   FileText,
   Clock,
   DollarSign,
+  MapPin,
 } from "lucide-react";
 
 interface CarDetailClientProps {
@@ -92,6 +93,13 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 {car.name}
               </h1>
+              
+              {car.location && (
+                <div className="flex items-center gap-2 mb-6 text-gray-400">
+                  <MapPin className="w-5 h-5" />
+                  <span className="text-lg">{car.location}</span>
+                </div>
+              )}
               
               {/* The Vibe */}
               <div className="mb-6">

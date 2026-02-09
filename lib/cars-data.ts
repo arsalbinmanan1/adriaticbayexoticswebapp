@@ -60,6 +60,7 @@ export interface Car {
     highlights: string[];
   };
   available: boolean;
+  location?: string;
 }
 
 export const carsData: Car[] = [

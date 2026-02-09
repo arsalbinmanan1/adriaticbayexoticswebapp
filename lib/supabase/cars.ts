@@ -75,6 +75,7 @@ export function mapDbCarToInterface(dbCar: DbCar) {
             highlights: dbCar.features.slice(0, 3), // Use first 3 features as highlights
         },
         available: dbCar.status === 'available',
+        location: dbCar.current_location || undefined,
     }
 }
 

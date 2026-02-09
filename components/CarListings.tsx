@@ -1,16 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
+import { Star, MapPin } from "lucide-react";
 import { getAllCars } from "@/lib/supabase/cars";
 import { Car } from "@/lib/cars-data";
 import Link from "next/link";
 
 
 export default function CarListings() {
+  const router = useRouter();
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +24,10 @@ export default function CarListings() {
     }
     loadCars();
   }, []);
+
+  const handleCarClick = (slug: string) => {
+    router.push(`/fleet/${slug}`);
+  };
 
 
   return (
@@ -45,6 +51,7 @@ export default function CarListings() {
               key={car.id}
               className="group bg-zinc-900 border-zinc-800 overflow-hidden hover:border-red-600 transition-all duration-300"
               style={{ animationDelay: `${index * 0.1}s` }}
+              onClick={() => handleCarClick(car.slug)}
             >
               <div className="relative overflow-hidden">
                 {car.images?.main ? (
@@ -75,6 +82,13 @@ export default function CarListings() {
                 <h3 className="text-xl font-bold text-white mb-3">
                   {car.name}
                 </h3>
+                
+                {car.location && (
+                  <div className="flex items-center gap-1.5 mb-3 text-sm text-gray-400">
+                    <MapPin className="w-4 h-4" />
+                    <span>{car.location}</span>
+                  </div>
+                )}
                 
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-1">

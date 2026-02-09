@@ -4,13 +4,16 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { MapPin } from "lucide-react";
 import { getAllCars } from "@/lib/supabase/cars";
 import { Car } from "@/lib/cars-data";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { useRouter } from "next/navigation";
 
 export default function FleetPage() {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +39,10 @@ export default function FleetPage() {
     { id: "luxury", label: "Luxury" },
     { id: "sports", label: "Sports" },
   ];
+
+  const handleCarClick = (slug: string) => {
+    router.push(`/fleet/${slug}`);
+  };
 
   return (
     <div className="min-h-screen bg-zinc-950">
@@ -89,6 +96,7 @@ export default function FleetPage() {
                 key={car.id}
                 className="group bg-zinc-900 border-zinc-800 overflow-hidden hover:border-red-600 transition-all duration-300"
                 style={{ animationDelay: `${index * 0.1}s` }}
+                onClick={() => handleCarClick(car.slug)}
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -113,6 +121,13 @@ export default function FleetPage() {
                   <h3 className="text-2xl font-bold text-white mb-2">
                     {car.name}
                   </h3>
+
+                  {car.location && (
+                    <div className="flex items-center gap-1.5 mb-3 text-sm text-gray-400">
+                      <MapPin className="w-4 h-4" />
+                      <span>{car.location}</span>
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-2 gap-2 mb-4 text-sm text-gray-400">
                     <div>
