@@ -27,6 +27,30 @@ export async function PATCH(request: Request) {
 
         if (fetchError || !booking) throw new Error('Booking not found')
 
+        if (pickupDatetime) {
+            const pickupDate = new Date(pickupDatetime)
+            if (Number.isNaN(pickupDate.getTime())) {
+                return NextResponse.json({ error: 'Invalid pickup date.' }, { status: 400 })
+            }
+
+            const now = new Date()
+            if (pickupDate <= now) {
+                return NextResponse.json({ error: 'Pickup must be in the future.' }, { status: 400 })
+            }
+        }
+
+        if (dropoffDatetime) {
+            const dropoffDate = new Date(dropoffDatetime)
+            if (Number.isNaN(dropoffDate.getTime())) {
+                return NextResponse.json({ error: 'Invalid dropoff date.' }, { status: 400 })
+            }
+
+            const pickupBase = new Date(pickupDatetime || booking.pickup_datetime)
+            if (Number.isNaN(pickupBase.getTime()) || dropoffDate <= pickupBase) {
+                return NextResponse.json({ error: 'Dropoff must be after pickup.' }, { status: 400 })
+            }
+        }
+
         // 2. Check availability if dates/car changed
         if (pickupDatetime !== booking.pickup_datetime || dropoffDatetime !== booking.dropoff_datetime || (carId && carId !== booking.car_id)) {
             const { data: availability } = await supabase.rpc('check_booking_availability', {

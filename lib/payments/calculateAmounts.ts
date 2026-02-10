@@ -4,7 +4,7 @@
  * 
  * Rules:
  * - Security Deposit: $300 OR 20% of total rental, whichever is higher.
- * - Tax: 7% (Adjustable as per business requirements).
+ * - Tax: 0% (No tax charged for now).
  */
 
 export interface AddOn {
@@ -35,7 +35,7 @@ interface CalculationOutput {
     remainingBalance: number
 }
 
-const TAX_RATE = 0.07 // 7%
+const TAX_RATE = 0 // 0% - No tax charged
 const MIN_SECURITY_DEPOSIT = 300 // $300
 
 export const calculateAmounts = (input: CalculationInput): CalculationOutput => {
