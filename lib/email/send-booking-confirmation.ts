@@ -29,7 +29,6 @@ interface BookingData {
   addOnsTotal: number;
   discountAmount: number;
   promoCode?: string;
-  taxAmount: number;
   totalAmount: number;
   depositPaid: number;
   
@@ -73,7 +72,6 @@ export async function sendBookingConfirmationEmail(booking: BookingData): Promis
       addOnsTotal: booking.addOnsTotal,
       discountAmount: booking.discountAmount,
       promoCode: booking.promoCode,
-      taxAmount: booking.taxAmount,
       totalAmount: booking.totalAmount,
       
       depositPaid: booking.depositPaid,

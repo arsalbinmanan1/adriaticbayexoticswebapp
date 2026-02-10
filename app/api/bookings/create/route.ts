@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { calculateAmounts } from '@/lib/payments/calculateAmounts'
+import { normalizePhoneNumber } from '@/lib/validation/phone'
 
 /**
  * API Route: /api/bookings/create
@@ -23,6 +25,17 @@ export async function POST(request: Request) {
 
         const supabase = createAdminClient()
 
+        const normalizedPhone = normalizePhoneNumber(customerPhone)
+        if (!normalizedPhone) {
+            return NextResponse.json({ error: 'Invalid phone number format.' }, { status: 400 })
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(customerEmail)) {
+            return NextResponse.json({ error: 'Invalid email address format.' }, { status: 400 })
+        }
+
         // 0. Idempotency check - prevent duplicate bookings
         const idempotencyKey = `${carId}-${customerEmail}-${pickupDatetime}-${dropoffDatetime}`
         const { data: existingDraftBooking } = await supabase
@@ -36,6 +49,19 @@ export async function POST(request: Request) {
             .maybeSingle()
 
         if (existingDraftBooking) {
+            const { error: updateExistingError } = await supabase
+                .from('bookings')
+                .update({
+                    customer_name: customerName,
+                    customer_phone: normalizedPhone
+                })
+                .eq('id', existingDraftBooking.id)
+
+            if (updateExistingError) {
+                console.error('[BOOKING CREATE] Failed to update existing booking:', updateExistingError)
+                return NextResponse.json({ error: 'Failed to update existing booking.' }, { status: 500 })
+            }
+
             console.log(`[BOOKING CREATE] Duplicate booking detected: ${existingDraftBooking.id}`)
             return NextResponse.json({
                 success: true,
@@ -89,19 +115,46 @@ export async function POST(request: Request) {
             }, { status: 409 })
         }
 
-        // 2.1 Validate Customer Age and Email, then check blacklist
+        // 2.1 Validate Customer DOB and age
         if (body.customerDob) {
             const dob = new Date(body.customerDob)
-            const age = new Date().getFullYear() - dob.getFullYear()
+            if (Number.isNaN(dob.getTime())) {
+                return NextResponse.json({ error: 'Invalid date of birth.' }, { status: 400 })
+            }
+
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+
+            if (dob > today) {
+                return NextResponse.json({ error: 'Date of birth cannot be in the future.' }, { status: 400 })
+            }
+
+            let age = today.getFullYear() - dob.getFullYear()
+            const monthDelta = today.getMonth() - dob.getMonth()
+            if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < dob.getDate())) {
+                age -= 1
+            }
+
             if (age < 18) {
                 return NextResponse.json({ error: 'You must be at least 18 years old to rent a vehicle.' }, { status: 400 })
             }
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(customerEmail)) {
-            return NextResponse.json({ error: 'Invalid email address format.' }, { status: 400 })
+        // 2.2 Validate pickup/dropoff datetimes
+        const pickupDate = new Date(pickupDatetime)
+        const dropoffDate = new Date(dropoffDatetime)
+
+        if (Number.isNaN(pickupDate.getTime()) || Number.isNaN(dropoffDate.getTime())) {
+            return NextResponse.json({ error: 'Invalid pickup or dropoff date.' }, { status: 400 })
+        }
+
+        const now = new Date()
+        if (pickupDate <= now) {
+            return NextResponse.json({ error: 'Pickup must be in the future.' }, { status: 400 })
+        }
+
+        if (dropoffDate <= pickupDate) {
+            return NextResponse.json({ error: 'Dropoff must be after pickup.' }, { status: 400 })
         }
 
         // Check if customer is blacklisted
@@ -178,7 +231,7 @@ export async function POST(request: Request) {
                 car_id: carId,
                 customer_name: customerName,
                 customer_email: customerEmail,
-                customer_phone: customerPhone,
+                customer_phone: normalizedPhone,
                 customer_dob: body.customerDob,
                 customer_address_street: body.customerAddressStreet,
                 customer_address_city: body.customerAddressCity,
