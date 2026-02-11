@@ -44,7 +44,12 @@ export const checkoutSchema = z.object({
     // Step 2: Rental Details
     pickupDatetime: z.string()
         .refine((val) => !Number.isNaN(new Date(val).getTime()), "Invalid pickup date")
-        .refine((val) => new Date(val) > new Date(), "Pickup must be in the future"),
+        .refine((val) => {
+            const pickup = new Date(val)
+            const now = new Date()
+            now.setSeconds(0, 0)
+            return pickup >= now
+        }, "Pickup must be now or in the future"),
     dropoffDatetime: z.string()
         .refine((val) => !Number.isNaN(new Date(val).getTime()), "Invalid dropoff date"),
     pickupLocation: z.string().min(1, "Pickup location is required"),

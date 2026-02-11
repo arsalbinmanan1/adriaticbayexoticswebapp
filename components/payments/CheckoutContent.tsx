@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Car } from '@/lib/cars-data'
@@ -100,27 +100,45 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
   }, [step])
 
 
+  const draftKey = `checkout_draft_${car.id}`
+  const previousCarId = useRef<string | null>(null)
+
   // --- Autosave Logic ---
   useEffect(() => {
-    const saved = localStorage.getItem('checkout_draft')
+    if (previousCarId.current && previousCarId.current !== car.id) {
+      localStorage.removeItem(`checkout_draft_${previousCarId.current}`)
+    }
+    previousCarId.current = car.id
+  }, [car.id])
+
+  useEffect(() => {
+    const saved = localStorage.getItem(draftKey)
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
         Object.keys(parsed).forEach(key => {
           setValue(key as any, parsed[key])
         })
+
+        if (parsed.pickupDatetime) {
+          const pickup = new Date(parsed.pickupDatetime)
+          if (Number.isNaN(pickup.getTime()) || pickup <= new Date()) {
+            setValue('pickupDatetime', '')
+            setValue('dropoffDatetime', '')
+          }
+        }
       } catch (e) {
         console.error('Failed to load draft:', e)
       }
     }
-  }, [setValue])
+  }, [draftKey, setValue])
 
   useEffect(() => {
     const subscription = watch((value) => {
-      localStorage.setItem('checkout_draft', JSON.stringify(value))
+      localStorage.setItem(draftKey, JSON.stringify(value))
     })
     return () => subscription.unsubscribe()
-  }, [watch])
+  }, [draftKey, watch])
 
   // --- Calculations ---
   const calculatePricing = () => {
@@ -212,8 +230,6 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
         deliveryFee: 0
       })
 
-      const paymentWindow = window.open('', '_blank', 'noopener,noreferrer')
-
       // Step 1: Create the booking
       const response = await fetch('/api/bookings/create', {
         method: 'POST',
@@ -236,7 +252,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
       if (resData.success) {
         const createdBookingId = resData.bookingId
         setBookingId(createdBookingId)
-        localStorage.removeItem('checkout_draft')
+        localStorage.removeItem(draftKey)
         
         // Step 2: Create Square Checkout session
         console.log('[CHECKOUT] Creating Square Checkout session...')
@@ -270,17 +286,10 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
           })
 
           setTimeout(() => {
-            if (paymentWindow) {
-              paymentWindow.location.href = checkoutData.checkoutUrl
-            } else {
-              window.location.href = checkoutData.checkoutUrl
-            }
+            window.location.href = checkoutData.checkoutUrl
           }, 2000)
         } else {
           setError(checkoutData.error || 'Failed to create checkout session')
-          if (paymentWindow) {
-            paymentWindow.close()
-          }
           Swal.fire({
             icon: 'error',
             title: 'Checkout Failed',
@@ -292,9 +301,6 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
         }
       } else {
         setError(resData.error || 'Failed to create booking')
-        if (paymentWindow) {
-          paymentWindow.close()
-        }
         Swal.fire({
           icon: 'error',
           title: 'Booking Failed',

@@ -149,8 +149,9 @@ export async function POST(request: Request) {
         }
 
         const now = new Date()
-        if (pickupDate <= now) {
-            return NextResponse.json({ error: 'Pickup must be in the future.' }, { status: 400 })
+        now.setSeconds(0, 0)
+        if (pickupDate < now) {
+            return NextResponse.json({ error: 'Pickup must be now or in the future.' }, { status: 400 })
         }
 
         if (dropoffDate <= pickupDate) {

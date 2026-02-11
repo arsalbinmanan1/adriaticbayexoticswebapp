@@ -14,12 +14,6 @@ export const AVAILABLE_ADDONS: AddOn[] = [
         type: 'per_day'
     },
     {
-        id: 'delivery',
-        name: 'Delivery (50 mile radius from St Petersburg)',
-        price: 150.00,
-        type: 'fixed'
-    },
-    {
         id: 'child-seat',
         name: 'Child Safety Seat (only available in SUV and sedans)',
         price: 49.00,
