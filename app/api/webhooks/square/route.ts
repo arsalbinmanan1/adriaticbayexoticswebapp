@@ -91,6 +91,7 @@ export async function POST(request: Request) {
                                     .update({
                                         deposit_status: 'paid',
                                         payment_status: 'deposit_paid',
+                                        status: 'confirmed',
                                         updated_at: new Date().toISOString()
                                     })
                                     .eq('id', bookingId)

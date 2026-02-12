@@ -18,6 +18,24 @@ export async function PATCH(
         const { status, reason } = await request.json();
         const supabase = createAdminClient();
 
+        const { data: existingBooking, error: existingError } = await supabase
+            .from("bookings")
+            .select("payment_status")
+            .eq("id", id)
+            .single();
+
+        if (existingError || !existingBooking) {
+            return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+        }
+
+        const paidStatuses = new Set(["paid", "deposit_paid"]);
+        const needsPayment = ["confirmed", "active", "completed"].includes(status);
+        const hasPaid = paidStatuses.has(String(existingBooking.payment_status || "").toLowerCase());
+
+        if (needsPayment && !hasPaid) {
+            return NextResponse.json({ error: "Payment is not completed for this booking." }, { status: 400 });
+        }
+
         // 1. Update status in DB
         const { data: booking, error: updateError } = await supabase
             .from("bookings")

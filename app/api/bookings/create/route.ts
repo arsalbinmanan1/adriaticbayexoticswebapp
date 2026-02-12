@@ -148,10 +148,10 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invalid pickup or dropoff date.' }, { status: 400 })
         }
 
-        const now = new Date()
-        now.setSeconds(0, 0)
-        if (pickupDate < now) {
-            return NextResponse.json({ error: 'Pickup must be now or in the future.' }, { status: 400 })
+        const todayStart = new Date()
+        todayStart.setHours(0, 0, 0, 0)
+        if (pickupDate < todayStart) {
+            return NextResponse.json({ error: 'Pickup must be today or in the future.' }, { status: 400 })
         }
 
         if (dropoffDate <= pickupDate) {
@@ -257,7 +257,7 @@ export async function POST(request: Request) {
                 promo_code: promoCode,
                 discount_type: discountType,
                 deposit_amount: pricing.securityDepositAmount,
-                status: 'confirmed', // Default to confirmed instead of pending
+                status: 'pending',
                 payment_status: 'unpaid'
             })
             .select()

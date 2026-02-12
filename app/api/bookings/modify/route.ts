@@ -33,9 +33,10 @@ export async function PATCH(request: Request) {
                 return NextResponse.json({ error: 'Invalid pickup date.' }, { status: 400 })
             }
 
-            const now = new Date()
-            if (pickupDate <= now) {
-                return NextResponse.json({ error: 'Pickup must be in the future.' }, { status: 400 })
+            const todayStart = new Date()
+            todayStart.setHours(0, 0, 0, 0)
+            if (pickupDate < todayStart) {
+                return NextResponse.json({ error: 'Pickup must be today or in the future.' }, { status: 400 })
             }
         }
 

@@ -78,10 +78,10 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
   const watchedFields = watch()
   const now = new Date()
-  now.setSeconds(0, 0)
+  now.setHours(0, 0, 0, 0)
   const minPickupDateTime = toLocalDateTimeInputValue(now)
   const pickupDateTime = watchedFields.pickupDatetime ? new Date(watchedFields.pickupDatetime) : null
-  const minDropoffBase = pickupDateTime && !Number.isNaN(pickupDateTime.getTime()) && pickupDateTime > now
+  const minDropoffBase = pickupDateTime && !Number.isNaN(pickupDateTime.getTime()) && pickupDateTime >= now
     ? pickupDateTime
     : now
   const minDropoffDateTime = toLocalDateTimeInputValue(minDropoffBase)
@@ -122,7 +122,9 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
         if (parsed.pickupDatetime) {
           const pickup = new Date(parsed.pickupDatetime)
-          if (Number.isNaN(pickup.getTime()) || pickup <= new Date()) {
+          const todayStart = new Date()
+          todayStart.setHours(0, 0, 0, 0)
+          if (Number.isNaN(pickup.getTime()) || pickup < todayStart) {
             setValue('pickupDatetime', '')
             setValue('dropoffDatetime', '')
           }
