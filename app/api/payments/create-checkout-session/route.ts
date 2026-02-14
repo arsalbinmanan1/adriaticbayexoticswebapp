@@ -84,7 +84,7 @@ export async function POST(request: Request) {
         }
 
         // 4. Create Square Checkout session
-        const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/checkout/success`
+        const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://adriaticbayexotics.com'}/checkout/success`
         const idempotencyKey = `checkout-${bookingId}-${Date.now()}`.slice(0, 45)
 
         console.log(`[API: CREATE-CHECKOUT-SESSION] Creating Square Checkout. Idempotency=${idempotencyKey}`);
