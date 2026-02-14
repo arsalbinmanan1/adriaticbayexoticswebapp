@@ -206,7 +206,6 @@ export async function POST(request: Request) {
                         addOnsTotal: booking.fees || 0,
                         discountAmount: booking.discount_amount || 0,
                         promoCode: booking.promo_code,
-                        taxAmount: booking.tax,
                         totalAmount: booking.total_amount,
                         depositPaid: serverPricing.securityDepositAmount,
                         

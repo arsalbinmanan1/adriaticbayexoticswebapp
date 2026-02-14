@@ -1,14 +1,29 @@
 import { z } from 'zod'
+import { isValidPhoneNumber } from '@/lib/validation/phone'
 
 export const checkoutSchema = z.object({
     // Step 1: Personal Details
     customerName: z.string().min(2, "Full name is required"),
     customerEmail: z.string().email("Invalid email address"),
-    customerPhone: z.string().min(10, "Invalid phone number"),
-    customerDob: z.string().refine((dob) => {
-        const age = (new Date().getTime() - new Date(dob).getTime()) / (1000 * 60 * 60 * 24 * 365)
-        return age >= 18
-    }, "You must be at least 18 years old"),
+    customerPhone: z.string().refine(isValidPhoneNumber, "Invalid phone number"),
+    customerDob: z.string()
+        .refine((dob) => !Number.isNaN(new Date(dob).getTime()), "Invalid date of birth")
+        .refine((dob) => {
+            const dobDate = new Date(dob)
+            const today = new Date()
+            today.setHours(0, 0, 0, 0)
+            return dobDate <= today
+        }, "Date of birth cannot be in the future")
+        .refine((dob) => {
+            const dobDate = new Date(dob)
+            const today = new Date()
+            let age = today.getFullYear() - dobDate.getFullYear()
+            const monthDelta = today.getMonth() - dobDate.getMonth()
+            if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < dobDate.getDate())) {
+                age -= 1
+            }
+            return age >= 18
+        }, "You must be at least 18 years old"),
 
     // Address
     customerAddressStreet: z.string().min(5, "Street address is required"),
@@ -27,8 +42,16 @@ export const checkoutSchema = z.object({
     additionalDriverLicense: z.string().optional(),
 
     // Step 2: Rental Details
-    pickupDatetime: z.string().refine((val) => new Date(val) > new Date(), "Pickup must be in the future"),
-    dropoffDatetime: z.string(),
+    pickupDatetime: z.string()
+        .refine((val) => !Number.isNaN(new Date(val).getTime()), "Invalid pickup date")
+        .refine((val) => {
+            const pickup = new Date(val)
+            const todayStart = new Date()
+            todayStart.setHours(0, 0, 0, 0)
+            return pickup >= todayStart
+        }, "Pickup must be today or in the future"),
+    dropoffDatetime: z.string()
+        .refine((val) => !Number.isNaN(new Date(val).getTime()), "Invalid dropoff date"),
     pickupLocation: z.string().min(1, "Pickup location is required"),
     dropoffLocation: z.string().min(1, "Dropoff location is required"),
 

@@ -1,26 +1,25 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Car } from '@/lib/cars-data'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import SquarePaymentForm from './SquarePaymentForm'
 import StepProgress from './StepProgress'
 import { checkoutSchema, CheckoutFormData } from '@/lib/validation/checkout'
-import { calculateAmounts, AddOn } from '@/lib/payments/calculateAmounts'
+import { calculateAmounts } from '@/lib/payments/calculateAmounts'
 import { AVAILABLE_ADDONS } from '@/lib/constants/addons'
 import { 
   User, 
   Calendar, 
   MapPin, 
-  CreditCard, 
   ShieldCheck, 
   ChevronRight, 
   ChevronLeft,
   Plus,
-  Minus,
   CheckCircle2,
   AlertCircle
 } from 'lucide-react'
@@ -34,11 +33,27 @@ interface CheckoutContentProps {
 
 const STEPS = ['Information', 'Add-ons', 'Review', 'Payment']
 
+const toLocalDateInputValue = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const toLocalDateTimeInputValue = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
 export default function CheckoutContent({ car, initialPromoCode }: CheckoutContentProps) {
   const [step, setStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [bookingId, setBookingId] = useState<string | null>(null)
+  const [, setBookingId] = useState<string | null>(null)
   const [appliedPromo, setAppliedPromo] = useState<{ code: string, discount: number, type: string } | null>(null)
 
   const {
@@ -62,6 +77,15 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
 
   const watchedFields = watch()
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const minPickupDateTime = toLocalDateTimeInputValue(now)
+  const pickupDateTime = watchedFields.pickupDatetime ? new Date(watchedFields.pickupDatetime) : null
+  const minDropoffBase = pickupDateTime && !Number.isNaN(pickupDateTime.getTime()) && pickupDateTime >= now
+    ? pickupDateTime
+    : now
+  const minDropoffDateTime = toLocalDateTimeInputValue(minDropoffBase)
+  const maxDobDate = toLocalDateInputValue(new Date())
 
   // --- Exit Confirmation ---
   useEffect(() => {
@@ -76,39 +100,47 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
   }, [step])
 
 
+  const draftKey = `checkout_draft_${car.id}`
+  const previousCarId = useRef<string | null>(null)
+
   // --- Autosave Logic ---
   useEffect(() => {
-    const saved = localStorage.getItem('checkout_draft')
+    if (previousCarId.current && previousCarId.current !== car.id) {
+      localStorage.removeItem(`checkout_draft_${previousCarId.current}`)
+    }
+    previousCarId.current = car.id
+  }, [car.id])
+
+  useEffect(() => {
+    const saved = localStorage.getItem(draftKey)
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
         Object.keys(parsed).forEach(key => {
           setValue(key as any, parsed[key])
         })
+
+        if (parsed.pickupDatetime) {
+          const pickup = new Date(parsed.pickupDatetime)
+          const todayStart = new Date()
+          todayStart.setHours(0, 0, 0, 0)
+          if (Number.isNaN(pickup.getTime()) || pickup < todayStart) {
+            setValue('pickupDatetime', '')
+            setValue('dropoffDatetime', '')
+          }
+        }
       } catch (e) {
         console.error('Failed to load draft:', e)
       }
     }
-  }, [setValue])
+  }, [draftKey, setValue])
 
   useEffect(() => {
     const subscription = watch((value) => {
-      localStorage.setItem('checkout_draft', JSON.stringify(value))
+      localStorage.setItem(draftKey, JSON.stringify(value))
     })
     return () => subscription.unsubscribe()
-  }, [watch])
-
-  // --- Auto-apply promo code from URL ---
-  useEffect(() => {
-    if (initialPromoCode && !appliedPromo) {
-      setValue('promoCode', initialPromoCode)
-      // Auto-apply the promo code after a short delay to ensure form is ready
-      const timer = setTimeout(() => {
-        applyPromoCode()
-      }, 500)
-      return () => clearTimeout(timer)
-    }
-  }, [initialPromoCode, appliedPromo, setValue])
+  }, [draftKey, watch])
 
   // --- Calculations ---
   const calculatePricing = () => {
@@ -192,6 +224,15 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
     setIsSubmitting(true)
     setError(null)
     try {
+      console.log('[CHECKOUT] Submitting booking form', {
+        carId: car.id,
+        pickupDatetime: data.pickupDatetime,
+        dropoffDatetime: data.dropoffDatetime,
+        addOnsCount: data.addOnSelection?.length || 0,
+        deliveryFee: 0
+      })
+
+      // Step 1: Create the booking
       const response = await fetch('/api/bookings/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -203,20 +244,63 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
         })
       })
 
+      console.log('[CHECKOUT] Booking create response', {
+        ok: response.ok,
+        status: response.status
+      })
+
       const resData = await response.json()
+      console.log('[CHECKOUT] Booking create payload', resData)
       if (resData.success) {
-        setBookingId(resData.bookingId)
-        setStep(4)
-        localStorage.removeItem('checkout_draft')
+        const createdBookingId = resData.bookingId
+        setBookingId(createdBookingId)
+        localStorage.removeItem(draftKey)
         
-        Swal.fire({
-          icon: 'success',
-          title: 'Booking Created!',
-          text: 'Information verified. Finalizing your reservation...',
-          background: '#18181b',
-          color: '#fff',
-          confirmButtonColor: '#ef4444'
+        // Step 2: Create Square Checkout session
+        console.log('[CHECKOUT] Creating Square Checkout session...')
+        const checkoutResponse = await fetch('/api/payments/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookingId: createdBookingId })
         })
+
+        console.log('[CHECKOUT] Checkout session response', {
+          ok: checkoutResponse.ok,
+          status: checkoutResponse.status
+        })
+
+        const checkoutData = await checkoutResponse.json()
+        console.log('[CHECKOUT] Checkout session payload', checkoutData)
+        
+        if (checkoutData.success && checkoutData.checkoutUrl) {
+          console.log('[CHECKOUT] Redirecting to Square Checkout:', checkoutData.checkoutUrl)
+          
+          // Show success message before redirect
+          Swal.fire({
+            icon: 'success',
+            title: 'Booking Created!',
+            text: 'Redirecting to secure payment...',
+            background: '#18181b',
+            color: '#fff',
+            confirmButtonColor: '#ef4444',
+            timer: 2000,
+            showConfirmButton: false
+          })
+
+          setTimeout(() => {
+            window.location.href = checkoutData.checkoutUrl
+          }, 2000)
+        } else {
+          setError(checkoutData.error || 'Failed to create checkout session')
+          Swal.fire({
+            icon: 'error',
+            title: 'Checkout Failed',
+            text: checkoutData.error || 'Could not create payment session.',
+            background: '#18181b',
+            color: '#fff',
+            confirmButtonColor: '#ef4444'
+          })
+        }
       } else {
         setError(resData.error || 'Failed to create booking')
         Swal.fire({
@@ -238,7 +322,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
   }
 
 
-  const applyPromoCode = async () => {
+  const applyPromoCode = useCallback(async () => {
     const code = watchedFields.promoCode
     if (!code) return
     
@@ -294,7 +378,19 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
       setError('Failed to validate promo code')
       setAppliedPromo(null)
     }
-  }
+  }, [car.id, watchedFields.dropoffDatetime, watchedFields.pickupDatetime, watchedFields.promoCode])
+
+  // --- Auto-apply promo code from URL ---
+  useEffect(() => {
+    if (initialPromoCode && !appliedPromo) {
+      setValue('promoCode', initialPromoCode)
+      // Auto-apply the promo code after a short delay to ensure form is ready
+      const timer = setTimeout(() => {
+        applyPromoCode()
+      }, 500)
+      return () => clearTimeout(timer)
+    }
+  }, [initialPromoCode, appliedPromo, setValue, applyPromoCode])
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4">
@@ -328,7 +424,12 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                         <input {...register('customerPhone')} className={errors.customerPhone ? errorInputStyles : inputStyles} placeholder="+1 (727) 000-0000" />
                       </FormGroup>
                       <FormGroup label="Date of Birth" error={errors.customerDob?.message}>
-                        <input {...register('customerDob')} type="date" className={errors.customerDob ? errorInputStyles : inputStyles} />
+                        <input
+                          {...register('customerDob')}
+                          type="date"
+                          max={maxDobDate}
+                          className={errors.customerDob ? errorInputStyles : inputStyles}
+                        />
                       </FormGroup>
 
                     </div>
@@ -399,10 +500,20 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <FormGroup label="Pickup Date & Time" error={errors.pickupDatetime?.message}>
-                        <input {...register('pickupDatetime')} type="datetime-local" className={errors.pickupDatetime ? errorInputStyles : inputStyles} />
+                        <input
+                          {...register('pickupDatetime')}
+                          type="datetime-local"
+                          min={minPickupDateTime}
+                          className={errors.pickupDatetime ? errorInputStyles : inputStyles}
+                        />
                       </FormGroup>
                       <FormGroup label="Dropoff Date & Time" error={errors.dropoffDatetime?.message}>
-                        <input {...register('dropoffDatetime')} type="datetime-local" className={errors.dropoffDatetime ? errorInputStyles : inputStyles} />
+                        <input
+                          {...register('dropoffDatetime')}
+                          type="datetime-local"
+                          min={minDropoffDateTime}
+                          className={errors.dropoffDatetime ? errorInputStyles : inputStyles}
+                        />
                       </FormGroup>
 
                       <FormGroup label="Pickup Location" error={errors.pickupLocation?.message}>
@@ -577,7 +688,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
                   {error && (
                     <div className="p-4 bg-red-600/10 border border-red-600/20 text-red-500 rounded-xl flex items-center gap-3">
-                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                      <AlertCircle className="w-5 h-5 shrink-0" />
                       <p className="text-sm">{error}</p>
                     </div>
                   )}
@@ -599,26 +710,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
           </form>
 
-          {/* STEP 4: Payment - Rendered outside the form and after the form is closed */}
-          {step === 4 && bookingId && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <SquarePaymentForm 
-                bookingId={bookingId}
-                amount={pricing.securityDepositAmount}
-                buyerEmail={watchedFields.customerEmail}
-                buyerName={watchedFields.customerName}
-                onSuccess={() => {
-                  console.log(`[CHECKOUT] Payment success for ${bookingId}. Redirecting to success page...`);
-                  window.location.href = `/checkout/success?bookingId=${bookingId}`
-                }}
-                onError={(err) => {
-                  console.error(`[CHECKOUT] Payment error:`, err);
-                  setError(err);
-                }}
-              />
-            </div>
-          )}
-
+          {/* Payment is now handled by Square Checkout redirect - no step 4 needed */}
 
         </div>
 
@@ -627,7 +719,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
           <Card className="bg-zinc-900 border-zinc-800 sticky top-32 overflow-hidden shadow-2xl">
             <div className="h-48 overflow-hidden relative">
               <img src={car.images.gallery[0] || car.images.main} alt={car.name} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
+              <div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-zinc-900/40 to-transparent"></div>
               <div className="absolute bottom-4 left-6">
                 <p className="text-[10px] text-yellow-400 font-black uppercase tracking-[0.2em]">{car.brand}</p>
                 <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase">{car.name}</h3>
@@ -647,7 +739,6 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                     <span className="text-green-500 font-bold">-${pricing.discountApplied.toFixed(2)}</span>
                   </div>
                 )}
-                <SummaryRow label="Sales Tax (7%)" value={`$${pricing.taxAmount.toFixed(2)}`} />
               </div>
 
               <div className="pt-4 border-t border-zinc-800 flex justify-between items-end">

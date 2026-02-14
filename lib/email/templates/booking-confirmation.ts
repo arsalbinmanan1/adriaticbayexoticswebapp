@@ -8,34 +8,33 @@ interface BookingDetails {
   customerName: string;
   customerEmail: string;
   customerPhone: string;
-  
+
   carMake: string;
   carModel: string;
   carYear: number;
   carImage?: string;
-  
+
   pickupDate: string;
   pickupTime: string;
   pickupLocation: string;
-  
+
   dropoffDate: string;
   dropoffTime: string;
   dropoffLocation: string;
-  
+
   numberOfDays: number;
-  
+
   // Pricing
   dailyRate: number;
   baseRental: number;
   addOnsTotal: number;
   discountAmount: number;
   promoCode?: string;
-  taxAmount: number;
   totalAmount: number;
-  
+
   depositPaid: number;
   balanceDue: number;
-  
+
   // Add-ons
   addOns?: Array<{ name: string; price: number }>;
 }
@@ -45,7 +44,6 @@ export function generateBookingConfirmationEmail(details: BookingDetails): strin
     bookingId,
     customerName,
     customerEmail,
-    customerPhone,
     carMake,
     carModel,
     carYear,
@@ -62,7 +60,6 @@ export function generateBookingConfirmationEmail(details: BookingDetails): strin
     addOnsTotal,
     discountAmount,
     promoCode,
-    taxAmount,
     totalAmount,
     depositPaid,
     balanceDue,
@@ -250,15 +247,6 @@ export function generateBookingConfirmationEmail(details: BookingDetails): strin
                   ` : ''}
                   
                   <tr>
-                    <td style="padding: 8px 0; color: #9ca3af; font-size: 14px;">
-                      Sales Tax (7%)
-                    </td>
-                    <td style="padding: 8px 0; text-align: right; color: #ffffff; font-size: 14px; font-weight: 600;">
-                      $${taxAmount.toFixed(2)}
-                    </td>
-                  </tr>
-                  
-                  <tr>
                     <td colspan="2" style="padding: 15px 0 10px; border-top: 2px solid #3f3f46;"></td>
                   </tr>
                   
@@ -416,7 +404,7 @@ PAYMENT SUMMARY
 ---------------
 Base Rental: $${details.baseRental.toFixed(2)}
 Add-ons & Extras: $${details.addOnsTotal.toFixed(2)}
-${details.discountAmount > 0 ? `Discount: -$${details.discountAmount.toFixed(2)}\n` : ''}Tax (7%): $${details.taxAmount.toFixed(2)}
+${details.discountAmount > 0 ? `Discount: -$${details.discountAmount.toFixed(2)}\n` : ''}
 ------------------------------------------
 TOTAL: $${details.totalAmount.toFixed(2)}
 
