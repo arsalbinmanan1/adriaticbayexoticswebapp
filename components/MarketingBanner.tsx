@@ -52,21 +52,8 @@ export default function MarketingBanner({ campaign, onOpenSpinWheel, onOpenValen
       className="sticky top-0 z-40 w-full py-2 px-4 flex flex-col sm:flex-row items-center justify-center gap-3 animate-in fade-in slide-in-from-top duration-500"
       style={{ backgroundColor: campaign.theme.primary, color: campaign.theme.accent }}
     >
-      <div className="flex items-center gap-2 font-medium text-sm md:text-base">
-        <span className="hidden sm:inline">🔥</span>
-        {campaign.bannerText}
-      </div>
 
       <div className="flex items-center gap-2 sm:gap-4">
-        <div className="flex items-center gap-1.5 font-mono text-xs md:text-sm bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20">
-          <Timer className="w-3.5 h-3.5" />
-          <div className="flex gap-1">
-            <span>{timeLeft.days}d</span>
-            <span>{timeLeft.hours.toString().padStart(2, '0')}h</span>
-            <span>{timeLeft.minutes.toString().padStart(2, '0')}m</span>
-            <span>{timeLeft.seconds.toString().padStart(2, '0')}s</span>
-          </div>
-        </div>
 
         {/* Spin Wheel Button */}
         {onOpenSpinWheel && (
@@ -94,14 +81,6 @@ export default function MarketingBanner({ campaign, onOpenSpinWheel, onOpenValen
           </Button>
         )}
 
-        <Link href={`/fleet?promo=${campaign.promoCode}`}>
-          <Button 
-            size="sm" 
-            className="bg-white text-zinc-900 border-none hover:bg-gray-100 h-8 px-3 sm:px-4 rounded-full font-bold text-xs"
-          >
-            Apply Code
-          </Button>
-        </Link>
 
         <button 
           onClick={() => setIsVisible(false)}
