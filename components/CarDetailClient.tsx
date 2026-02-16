@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -58,10 +59,13 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
             {/* Images */}
             <div>
               <div className="mb-4 rounded-2xl overflow-hidden">
-                <img
+                <Image
                   src={selectedImage}
                   alt={car.name}
+                  width={800}
+                  height={400}
                   className="w-full h-[400px] object-cover"
+                  priority
                 />
               </div>
               <div className="grid grid-cols-4 gap-4">
@@ -75,9 +79,11 @@ export default function CarDetailClient({ car, otherCars }: CarDetailClientProps
                         : "border-zinc-800 hover:border-yellow-500/50"
                     }`}
                   >
-                    <img
+                    <Image
                       src={image}
                       alt={`${car.name} ${index + 1}`}
+                      width={160}
+                      height={80}
                       className="w-full h-20 object-cover"
                     />
                   </button>
