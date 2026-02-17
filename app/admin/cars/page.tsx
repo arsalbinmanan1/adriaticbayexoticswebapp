@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Car as CarIcon } from "lucide-react";
 import { DeleteCarButton } from "@/components/admin/DeleteCarButton";
-import Image from "next/image";
 
 export default async function CarsPage() {
   const supabase = createAdminClient();
@@ -65,11 +64,10 @@ export default async function CarsPage() {
                 <TableCell>
                   <div className="h-10 w-16 relative rounded overflow-hidden bg-neutral-800">
                     {car.images?.[0] ? (
-                      <Image 
-                        src={car.images[0]} 
+                      <img
+                        src={car.images[0]}
                         alt={`${car.make} ${car.model}`}
-                        fill
-                        className="object-cover"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full w-full">

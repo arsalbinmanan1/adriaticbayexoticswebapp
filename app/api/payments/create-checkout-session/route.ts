@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { squareClient, parseSquareError } from '@/lib/square/client'
+// Square integration disabled: import removed
 import { rateLimit, RateLimitPresets, getClientIdentifier } from '@/lib/rate-limit'
 import { normalizePhoneNumber } from '@/lib/validation/phone'
 
@@ -53,18 +53,7 @@ export async function POST(request: Request) {
             hasCarJoin: !!booking.cars
         })
 
-        const squareLocationId = process.env.SQUARE_LOCATION_ID
-        const squareAccessToken = process.env.SQUARE_ACCESS_TOKEN
-
-        if (!squareLocationId || !squareAccessToken) {
-            console.error('[API: CREATE-CHECKOUT-SESSION] Square env missing', {
-                hasLocationId: !!squareLocationId,
-                hasAccessToken: !!squareAccessToken
-            })
-            return NextResponse.json({
-                error: 'Square is not configured. Please contact support.'
-            }, { status: 500 })
-        }
+        // Square disabled: skip environment checks
 
         if (!booking.cars) {
             console.error('[API: CREATE-CHECKOUT-SESSION] Missing car details on booking', {
@@ -83,100 +72,34 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Invalid deposit amount' }, { status: 400 })
         }
 
-        // 4. Create Square Checkout session
-        const checkoutUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://adriaticbayexotics.com'}/checkout/success`
-        const idempotencyKey = `checkout-${bookingId}-${Date.now()}`.slice(0, 45)
-
-        console.log(`[API: CREATE-CHECKOUT-SESSION] Creating Square Checkout. Idempotency=${idempotencyKey}`);
-        console.log('[API: CREATE-CHECKOUT-SESSION] Square payload summary', {
-            locationId: squareLocationId,
-            amountCents: Math.round(depositAmount * 100),
-            redirectUrl: `${checkoutUrl}?bookingId=${bookingId}`
-        })
-
-        const normalizedPhone = normalizePhoneNumber(booking.customer_phone)
-        const rawPhone = booking.customer_phone || ''
-        const maskPhone = (value: string) => {
-            const digits = value.replace(/\D/g, '')
-            if (digits.length <= 4) return digits
-            return `${'*'.repeat(Math.max(0, digits.length - 4))}${digits.slice(-4)}`
-        }
-
-        console.log('[API: CREATE-CHECKOUT-SESSION] Phone formatting', {
-            rawMasked: maskPhone(String(rawPhone)),
-            normalizedMasked: normalizedPhone ? maskPhone(normalizedPhone) : null,
-            normalizedLength: normalizedPhone?.length || 0
-        })
-        const result = await squareClient.checkout.paymentLinks.create({
-            idempotencyKey,
-            order: {
-                locationId: squareLocationId,
-                lineItems: [{
-                    name: `Security Deposit - ${booking.cars.year} ${booking.cars.make} ${booking.cars.model}`,
-                    quantity: '1',
-                    basePriceMoney: {
-                        amount: BigInt(Math.round(depositAmount * 100)), // Convert to cents
-                        currency: 'USD'
-                    }
-                }],
-                metadata: {
-                    bookingId: String(bookingId),
-                    customerEmail: booking.customer_email,
-                    customerName: booking.customer_name
-                }
-            },
-            checkoutOptions: {
-                redirectUrl: `${checkoutUrl}?bookingId=${bookingId}`,
-                askForShippingAddress: false,
-                acceptedPaymentMethods: {
-                    applePay: true,
-                    googlePay: true,
-                    cashAppPay: false,
-                    afterpayClearpay: false
-                }
-            },
-            prePopulatedData: {
-                buyerEmail: booking.customer_email,
-                buyerPhoneNumber: normalizedPhone || undefined
-            }
-        })
-
-        const paymentLink = result.paymentLink
-
-        if (!paymentLink || !paymentLink.url) {
-            console.error(`[API: CREATE-CHECKOUT-SESSION] Square checkout creation failed`);
-            throw new Error('Failed to create checkout session')
-        }
-
-        console.log(`[API: CREATE-CHECKOUT-SESSION] Square checkout created: ${paymentLink.id}`);
-
-        // 5. Store the payment link ID in booking for reference
-        await supabase
+        // Square disabled: confirm booking immediately without payment
+        const { error: bookingUpdateError } = await supabase
             .from('bookings')
             .update({
-                square_payment_link_id: paymentLink.id
+                payment_status: 'unpaid',
+                status: 'confirmed',
+                square_payment_link_id: null,
+                expires_at: null
             })
             .eq('id', bookingId)
 
-        console.log('[API: CREATE-CHECKOUT-SESSION] Stored payment link on booking', {
-            bookingId,
-            paymentLinkId: paymentLink.id
-        })
+        if (bookingUpdateError) {
+            console.error('[API: CREATE-CHECKOUT-SESSION] Failed to confirm booking when payments disabled:', bookingUpdateError)
+            return NextResponse.json({ error: 'Failed to confirm booking' }, { status: 500 })
+        }
 
         return NextResponse.json({
             success: true,
-            checkoutUrl: paymentLink.url,
-            paymentLinkId: paymentLink.id
+            message: 'Payments disabled. Booking confirmed and visible in admin panel.'
         })
 
     } catch (error) {
         console.error(`[API: CREATE-CHECKOUT-SESSION] FATAL ERROR:`, error);
-        const userMessage = parseSquareError(error)
         const isDev = process.env.NODE_ENV !== 'production'
         const debug = isDev && error instanceof Error
             ? { name: error.name, message: error.message }
             : undefined
 
-        return NextResponse.json({ error: userMessage, debug }, { status: 500 })
+        return NextResponse.json({ error: 'Payments are disabled.', debug }, { status: 500 })
     }
 }

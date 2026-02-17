@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { squareClient, parseSquareError } from '@/lib/square/client'
+// Square integration disabled: import removed
 import { calculateAmounts } from '@/lib/payments/calculateAmounts'
 import { rateLimit, RateLimitPresets, getClientIdentifier } from '@/lib/rate-limit'
 
@@ -101,137 +101,72 @@ export async function POST(request: Request) {
             }, { status: 400 })
         }
 
-        // 7. Create Square Payment with unique idempotency key per attempt
-        // Idempotency key max length is 45 characters
-        const timestamp = Date.now().toString().slice(-10) // Last 10 digits
-        const shortBookingId = String(bookingId).slice(0, 20)
-        const idempotencyKey = `dep-${shortBookingId}-${timestamp}`.slice(0, 45)
-        console.log(`[API: CREATE-DEPOSIT] Initiating Square payment. Idempotency=${idempotencyKey}`);
+        // Square is disabled: mark booking as confirmed without payment
+        const { error: bookingUpdateError } = await supabase
+            .from('bookings')
+            .update({
+                payment_status: 'unpaid',
+                status: 'confirmed',
+                expires_at: null
+            })
+            .eq('id', bookingId)
 
-        // Create payment note (max 45 chars for Square)
-        const bookingRef = String(booking.reference_number || bookingId).slice(0, 20)
-        const paymentNote = `Deposit ${bookingRef}`.slice(0, 45)
-        const referenceId = String(bookingId).slice(0, 40)
-
-        console.log(`[API: CREATE-DEPOSIT] Payment fields:`, {
-            noteLength: paymentNote.length,
-            referenceIdLength: referenceId.length,
-            note: paymentNote,
-            referenceId: referenceId
-        });
-
-        const { payment } = await squareClient.payments.create({
-            sourceId,
-            idempotencyKey,
-            amountMoney: {
-                amount: BigInt(Math.round(serverPricing.securityDepositAmount * 100)), // Convert to cents
-                currency: 'USD',
-            },
-            locationId: process.env.SQUARE_LOCATION_ID!,
-            verificationToken, // Required for 3DS
-            note: paymentNote,
-            referenceId: referenceId,
-        })
-
-        if (!payment) {
-            console.error(`[API: CREATE-DEPOSIT] Square payment object is null`);
-            throw new Error('Square payment creation failed')
+        if (bookingUpdateError) {
+            console.error('[API: CREATE-DEPOSIT] Failed to update booking when payments are disabled:', bookingUpdateError)
+            return NextResponse.json({ error: 'Failed to confirm booking' }, { status: 500 })
         }
 
-        console.log(`[API: CREATE-DEPOSIT] Square payment SUCCESS: ${payment.id}, Status: ${payment.status}`);
+        // Optional: send confirmation email (keep original behavior)
+        try {
+            const { sendBookingConfirmationEmail } = await import('@/lib/email/send-booking-confirmation');
+            const { data: car } = await supabase
+                .from('cars')
+                .select('make, model, year, images')
+                .eq('id', booking.car_id)
+                .single();
 
-        // 8. Log Transaction in Supabase
-        const { error: txError } = await supabase
-            .from('payment_transactions')
-            .insert({
-                booking_id: bookingId,
-                square_transaction_id: payment.id,
-                payment_type: 'security_deposit',
-                amount: Number(payment.amountMoney?.amount || 0) / 100,
-                currency: 'USD',
-                card_last_4: payment.cardDetails?.card?.last4,
-                card_brand: payment.cardDetails?.card?.cardBrand,
-                square_status: payment.status,
-                receipt_url: payment.receiptUrl,
-                processing_fees: payment.processingFee?.[0]?.amountMoney?.amount ? Number(payment.processingFee[0].amountMoney.amount) / 100 : 0,
-            })
+            if (car) {
+                await sendBookingConfirmationEmail({
+                    bookingId: booking.id,
+                    customerName: booking.customer_name,
+                    customerEmail: booking.customer_email,
+                    customerPhone: booking.customer_phone,
 
-        if (txError) console.error('[API: CREATE-DEPOSIT] Failed to log transaction:', txError)
+                    carMake: car.make,
+                    carModel: car.model,
+                    carYear: car.year,
+                    carImage: car.images?.[0] ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${car.images[0]}` : undefined,
 
-        // 9. Update Booking Status (only if payment is COMPLETED)
-        if (payment.status === 'COMPLETED') {
-            const { error: bookingUpdateError } = await supabase
-                .from('bookings')
-                .update({
-                    payment_status: 'paid',
-                    status: 'confirmed',
-                    expires_at: null // Clear expiration timer
-                })
-                .eq('id', bookingId)
+                    pickupDatetime: booking.pickup_datetime,
+                    dropoffDatetime: booking.dropoff_datetime,
+                    pickupLocation: booking.pickup_location,
+                    dropoffLocation: booking.dropoff_location,
 
-            if (bookingUpdateError) console.error('[API: CREATE-DEPOSIT] Failed to update booking:', bookingUpdateError)
-            else console.log(`[API: CREATE-DEPOSIT] Booking ${bookingId} updated to CONFIRMED`);
-            
-            // 10. Send confirmation email
-            try {
-                const { sendBookingConfirmationEmail } = await import('@/lib/email/send-booking-confirmation');
-                
-                // Fetch car details for email
-                const { data: car } = await supabase
-                    .from('cars')
-                    .select('make, model, year, images')
-                    .eq('id', booking.car_id)
-                    .single();
-                
-                if (car) {
-                    await sendBookingConfirmationEmail({
-                        bookingId: booking.id,
-                        customerName: booking.customer_name,
-                        customerEmail: booking.customer_email,
-                        customerPhone: booking.customer_phone,
-                        
-                        carMake: car.make,
-                        carModel: car.model,
-                        carYear: car.year,
-                        carImage: car.images?.[0] ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${car.images[0]}` : undefined,
-                        
-                        pickupDatetime: booking.pickup_datetime,
-                        dropoffDatetime: booking.dropoff_datetime,
-                        pickupLocation: booking.pickup_location,
-                        dropoffLocation: booking.dropoff_location,
-                        
-                        numberOfDays: booking.number_of_days,
-                        dailyRate: Number(booking.base_rate),
-                        baseRental: booking.subtotal,
-                        addOnsTotal: booking.fees || 0,
-                        discountAmount: booking.discount_amount || 0,
-                        promoCode: booking.promo_code,
-                        totalAmount: booking.total_amount,
-                        depositPaid: serverPricing.securityDepositAmount,
-                        
-                        addOns: [] // Could fetch from booking data if stored
-                    });
-                    
-                    console.log('[API: CREATE-DEPOSIT] Confirmation email sent successfully');
-                }
-            } catch (emailError) {
-                // Don't fail the payment if email fails
-                console.error('[API: CREATE-DEPOSIT] Failed to send confirmation email:', emailError);
+                    numberOfDays: booking.number_of_days,
+                    dailyRate: Number(booking.base_rate),
+                    baseRental: booking.subtotal,
+                    addOnsTotal: booking.fees || 0,
+                    discountAmount: booking.discount_amount || 0,
+                    promoCode: booking.promo_code,
+                    totalAmount: booking.total_amount,
+                    depositPaid: serverPricing.securityDepositAmount,
+
+                    addOns: []
+                });
             }
-        } else {
-            console.warn(`[API: CREATE-DEPOSIT] Payment status is ${payment.status}, not updating booking to confirmed`);
+        } catch (emailError) {
+            console.error('[API: CREATE-DEPOSIT] Failed to send confirmation email after disabling payments:', emailError);
         }
 
         return NextResponse.json({
             success: true,
-            paymentId: payment.id,
-            status: payment.status,
-            amount: serverPricing.securityDepositAmount,
+            message: 'Payments are disabled. Booking confirmed and visible in admin panel.',
+            bookingId,
+            amount: serverPricing.securityDepositAmount
         })
 
     } catch (error) {
         console.error(`[API: CREATE-DEPOSIT] FATAL ERROR:`, error);
-        const userMessage = parseSquareError(error)
-        return NextResponse.json({ error: userMessage }, { status: 500 })
+        return NextResponse.json({ error: 'Payments are disabled.' }, { status: 500 })
     }
 }

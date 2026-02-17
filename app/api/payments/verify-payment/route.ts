@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { squareClient } from '@/lib/square/client'
+// Square integration disabled: import removed
 
 /**
  * API Route: /api/payments/verify-payment
@@ -42,72 +42,25 @@ export async function POST(request: Request) {
             })
         }
 
-        // 3. Verify payment with Square if we have a payment link ID
-        if (!booking.square_payment_link_id) {
-            return NextResponse.json({
-                success: false,
-                status: 'MISSING_PAYMENT_LINK',
-                message: 'Payment link not found for this booking.'
-            }, { status: 409 })
-        }
-
-        try {
-            const result = await squareClient.checkout.paymentLinks.get({
-                id: booking.square_payment_link_id
-            })
-
-            const orderId = result.paymentLink?.orderId
-            if (!orderId) {
-                return NextResponse.json({
-                    success: false,
-                    status: 'MISSING_ORDER_ID',
-                    message: 'Payment link does not have an order ID yet.'
-                }, { status: 202 })
-            }
-
-            const orderResult = await squareClient.orders.get({ orderId })
-            const orderStatus = orderResult.order?.state
-            console.log(`[VERIFY-PAYMENT] Order status:`, orderStatus)
-
-            if (orderStatus !== 'COMPLETED') {
-                return NextResponse.json({
-                    success: false,
-                    status: orderStatus || 'UNKNOWN',
-                    message: 'Payment not completed yet.'
-                }, { status: 202 })
-            }
-
-            // Update booking status to confirmed
-            const { error: updateError } = await supabase
-                .from('bookings')
-                .update({
-                    status: 'confirmed',
-                    payment_status: 'paid',
-                    updated_at: new Date().toISOString()
-                })
-                .eq('id', bookingId)
-
-            if (updateError) {
-                console.error(`[VERIFY-PAYMENT] Failed to update booking:`, updateError)
-                throw updateError
-            }
-
-            console.log(`[VERIFY-PAYMENT] Booking ${bookingId} confirmed successfully`)
-
+        // Payments are disabled; simply return current booking status.
+        if (booking.status === 'confirmed') {
             return NextResponse.json({
                 success: true,
+                alreadyConfirmed: true,
                 booking: {
                     id: booking.id,
                     reference: booking.booking_reference,
-                    status: 'confirmed',
-                    paymentStatus: 'paid'
+                    status: booking.status,
+                    paymentStatus: booking.payment_status
                 }
             })
-
-        } catch (squareError) {
-            console.error(`[VERIFY-PAYMENT] Square API error:`, squareError)
-            return NextResponse.json({ error: 'Failed to verify payment with Square' }, { status: 502 })
         }
+
+        return NextResponse.json({
+            success: false,
+            status: 'PAYMENTS_DISABLED',
+            message: 'Payments are disabled. Booking will be visible in admin panel without payment.'
+        }, { status: 200 })
 
     } catch (error) {
         console.error(`[VERIFY-PAYMENT] Error:`, error)

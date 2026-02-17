@@ -31,7 +31,7 @@ interface CheckoutContentProps {
   initialPromoCode?: string
 }
 
-const STEPS = ['Information', 'Add-ons', 'Review', 'Payment']
+const STEPS = ['Information', 'Add-ons', 'Review']
 
 const toLocalDateInputValue = (date: Date) => {
   const year = date.getFullYear()
@@ -90,7 +90,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
   // --- Exit Confirmation ---
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (step < 4) {
+      if (step <= STEPS.length) {
         e.preventDefault()
         e.returnValue = ''
       }
@@ -255,52 +255,27 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
         const createdBookingId = resData.bookingId
         setBookingId(createdBookingId)
         localStorage.removeItem(draftKey)
-        
-        // Step 2: Create Square Checkout session
-        console.log('[CHECKOUT] Creating Square Checkout session...')
-        const checkoutResponse = await fetch('/api/payments/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ bookingId: createdBookingId })
+
+        // Payments are disabled — treat booking creation as completed.
+        // Show a modal and let the user choose where to go next.
+        Swal.fire({
+          title: 'Booking Created!',
+          text: 'Your booking has been created and is visible in the admin panel.',
+          icon: 'success',
+          background: '#18181b',
+          color: '#fff',
+          confirmButtonText: 'View Orders',
+          showDenyButton: true,
+          denyButtonText: 'Go to Dashboard',
+          showCancelButton: true,
+          confirmButtonColor: '#ef4444',
+          denyButtonColor: '#10b981'
         })
 
-        console.log('[CHECKOUT] Checkout session response', {
-          ok: checkoutResponse.ok,
-          status: checkoutResponse.status
-        })
-
-        const checkoutData = await checkoutResponse.json()
-        console.log('[CHECKOUT] Checkout session payload', checkoutData)
-        
-        if (checkoutData.success && checkoutData.checkoutUrl) {
-          console.log('[CHECKOUT] Redirecting to Square Checkout:', checkoutData.checkoutUrl)
-          
-          // Show success message before redirect
-          Swal.fire({
-            icon: 'success',
-            title: 'Booking Created!',
-            text: 'Redirecting to secure payment...',
-            background: '#18181b',
-            color: '#fff',
-            confirmButtonColor: '#ef4444',
-            timer: 2000,
-            showConfirmButton: false
-          })
-
-          setTimeout(() => {
-            window.location.href = checkoutData.checkoutUrl
-          }, 2000)
-        } else {
-          setError(checkoutData.error || 'Failed to create checkout session')
-          Swal.fire({
-            icon: 'error',
-            title: 'Checkout Failed',
-            text: checkoutData.error || 'Could not create payment session.',
-            background: '#18181b',
-            color: '#fff',
-            confirmButtonColor: '#ef4444'
-          })
-        }
+        // After showing the modal, take the user to the home page.
+        setTimeout(() => {
+          window.location.href = '/'
+        }, 1200)
       } else {
         setError(resData.error || 'Failed to create booking')
         Swal.fire({
@@ -697,12 +672,12 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                        <ChevronLeft className="w-5 h-5 mr-2" /> Back
                     </Button>
                     <Button 
-                      type="submit" 
-                      disabled={isSubmitting}
-                      className={actionButtonStyles}
-                    >
-                      {isSubmitting ? 'Confirming...' : 'Confirm & Proceed to Payment'}
-                    </Button>
+                        type="submit" 
+                        disabled={isSubmitting}
+                        className={actionButtonStyles}
+                      >
+                        {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
+                      </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -710,7 +685,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
 
           </form>
 
-          {/* Payment is now handled by Square Checkout redirect - no step 4 needed */}
+              {/* Payments are disabled; booking confirmed on submit */}
 
         </div>
 
@@ -748,7 +723,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                 </div>
               </div>
 
-              {/* Due Now Box */}
+              {/* Due Now Box disabled while payments are turned off
               <div className="p-5 bg-red-600/10 border border-red-600/20 rounded-2xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:scale-110 transition-transform">
                   <ShieldCheck className="w-12 h-12 text-red-600" />
@@ -764,9 +739,10 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                   </p>
                 </div>
               </div>
+              End Due Now Box */}
 
-              {/* Promo Input */}
-              {step < 4 && (
+              {/* Promo Input disabled while payments are turned off
+              {step <= STEPS.length && (
                 <div className="space-y-2 pt-2">
                   <p className="text-[10px] text-zinc-500 uppercase font-black tracking-widest">Have a promo code?</p>
                   <div className="flex gap-2">
@@ -818,6 +794,7 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
                   )}
                 </div>
               )}
+              End Promo Input */}
 
               <div className="pt-4 space-y-3">
                 <BadgeItem text="Free cancellation up to 48h before" />
