@@ -35,6 +35,17 @@ export interface DbCar {
     deleted_at?: string
 }
 
+function normalizeImageValue(img?: string | null): string {
+    if (!img) return ''
+    const v = String(img).trim()
+    if (/^https?:\/\//i.test(v)) return v
+    // keep absolute paths, but strip leading `/public` if present
+    if (v.startsWith('/')) return v.replace(/^\/public/, '')
+    // strip ./ or public/ then ensure leading slash
+    const cleaned = v.replace(/^\.\//, '').replace(/^public\//, '')
+    return cleaned.startsWith('/') ? cleaned : `/${cleaned}`
+}
+
 /**
  * Maps a database car object to the frontend Car interface format.
  */
@@ -57,8 +68,8 @@ export function mapDbCarToInterface(dbCar: DbCar) {
             interior: dbCar.interior_color || 'Not specified',
         },
         images: {
-            main: dbCar.images[0] || '',
-            gallery: dbCar.images,
+            main: normalizeImageValue(dbCar.images?.[0] || ''),
+            gallery: (dbCar.images || []).map(normalizeImageValue),
         },
         specs: {
             engine: dbCar.specifications?.engine || 'N/A',

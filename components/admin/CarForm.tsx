@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, ArrowLeft, Upload, X } from "lucide-react";
 import Link from "next/link";
@@ -20,6 +20,10 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [uploadingItems, setUploadingItems] = useState<Record<string, boolean>>({});
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   
   const [formData, setFormData] = useState({
     make: initialData?.make || "",
@@ -66,21 +70,125 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
         const data = await res.json();
         setError(data.error || "Failed to save car");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
   };
 
-  const addImageUrl = () => {
-    const url = prompt("Enter Image URL");
-    if (url) {
-      setFormData({ ...formData, images: [...formData.images, url] });
+  const normalizeAdminInput = (input: string) => {
+    let v = input.trim()
+    v = v.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1')
+    if (/^https?:\/\//i.test(v)) return v
+    v = v.replace(/^\.\//, '').replace(/^public\//, '')
+    if (!v.startsWith('/')) v = `/${v}`
+    return v
+  }
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // create a temporary preview URL and insert it immediately so user sees preview & can reorder
+    const preview = URL.createObjectURL(file)
+    setFormData(prev => ({ ...prev, images: [...prev.images, preview] }))
+
+    // mark preview as uploading
+    setUploadingItems(prev => {
+      const next = { ...prev, [preview]: true }
+      setUploading(Object.keys(next).length > 0)
+      return next
+    })
+
+    // perform upload and replace preview with final path
+    await uploadFileAndReplace(file, preview)
+
+    e.currentTarget.value = ''
+  }
+
+  const uploadFileAndReplace = async (file: File, previewSrc: string) => {
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
+    if (!allowed.includes(file.type)) {
+      alert('Only PNG, JPG/JPEG and WEBP are allowed')
+      // cleanup preview
+      setFormData(prev => ({ ...prev, images: prev.images.filter((i: string) => i !== previewSrc) }))
+      URL.revokeObjectURL(previewSrc)
+      setUploadingItems(prev => {
+        const next = { ...prev }
+        delete next[previewSrc]
+        setUploading(Object.keys(next).length > 0)
+        return next
+      })
+      return
     }
+    const maxBytes = 5 * 1024 * 1024
+    if (file.size > maxBytes) {
+      alert('Image must be smaller than 5 MB')
+      setFormData(prev => ({ ...prev, images: prev.images.filter((i: string) => i !== previewSrc) }))
+      URL.revokeObjectURL(previewSrc)
+      setUploadingItems(prev => {
+        const next = { ...prev }
+        delete next[previewSrc]
+        setUploading(Object.keys(next).length > 0)
+        return next
+      })
+      return
+    }
+
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch('/api/admin/upload-image', { method: 'POST', body: fd })
+      const data = await res.json()
+      if (!res.ok) {
+        alert(data?.error || 'Upload failed')
+        // remove preview
+        setFormData(prev => ({ ...prev, images: prev.images.filter((i: string) => i !== previewSrc) }))
+        return
+      }
+
+      // replace preview with returned path
+      setFormData(prev => ({ ...prev, images: prev.images.map((i: string) => (i === previewSrc ? data.path : i)) }))
+    } catch (err) {
+      console.error('Upload error', err)
+      alert('Upload failed')
+      setFormData(prev => ({ ...prev, images: prev.images.filter((i: string) => i !== previewSrc) }))
+    } finally {
+      // cleanup preview state + revoke object url
+      setUploadingItems(prev => {
+        const next = { ...prev }
+        delete next[previewSrc]
+        setUploading(Object.keys(next).length > 0)
+        return next
+      })
+      try { URL.revokeObjectURL(previewSrc) } catch {};
+    }
+  }
+
+  const triggerFileSelect = () => fileInputRef.current?.click()
+  const addImageUrl = () => {
+    const raw = prompt("Enter Image URL or path (e.g. /car-images/xx.jpg or https://...)")
+    if (!raw) return
+    const normalized = normalizeAdminInput(raw)
+    if (!/\.(jpe?g|png|webp|gif|svg)$/i.test(normalized)) {
+      if (!confirm('The value does not look like an image file. Add anyway?')) return
+    }
+    setFormData({ ...formData, images: [...formData.images, normalized] })
   };
 
   const removeImage = (index: number) => {
+    const url = formData.images[index]
+    // revoke blob preview URL if present
+    if (typeof url === 'string' && url.startsWith('blob:')) {
+      try { URL.revokeObjectURL(url) } catch {}
+      setUploadingItems(prev => {
+        const next = { ...prev }
+        delete next[url]
+        setUploading(Object.keys(next).length > 0)
+        return next
+      })
+    }
+
     const newImages = [...formData.images];
     newImages.splice(index, 1);
     setFormData({ ...formData, images: newImages });
@@ -417,30 +525,96 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
         <Card className="border-neutral-800 bg-neutral-900/50 text-white">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Vehicle Images</CardTitle>
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm" 
-              onClick={addImageUrl}
-              className="border-neutral-700 hover:bg-neutral-800"
-            >
-              <Upload className="h-4 w-4 mr-2" /> Add URL
-            </Button>
+
+            <div className="flex items-center gap-2">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                onChange={handleFileInputChange}
+              />
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={triggerFileSelect}
+                className="border-neutral-700 hover:bg-neutral-800 flex items-center"
+                disabled={uploading}
+              >
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Upload className="h-4 w-4 mr-2" />}
+                Upload
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addImageUrl}
+                className="border-neutral-700 hover:bg-neutral-800"
+              >
+                <Upload className="h-4 w-4 mr-2" /> Add URL
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {formData.images.map((url: string, index: number) => (
-                <div key={index} className="relative aspect-video rounded-md bg-neutral-950 border border-neutral-800 group overflow-hidden">
-                  <img src={url} alt="Vehicle" className="h-full w-full object-cover" />
-                  <button 
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 p-1 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              {formData.images.map((url: string, index: number) => {
+                const isUploading = !!uploadingItems[url]
+                const isPreview = typeof url === 'string' && url.startsWith('blob:')
+                return (
+                  <div
+                    key={index}
+                    draggable
+                    onDragStart={(e) => { e.dataTransfer.setData('text/plain', String(index)); e.dataTransfer.effectAllowed = 'move'; }}
+                    onDragOver={(e) => { e.preventDefault(); setDragOverIndex(index); }}
+                    onDragEnter={() => setDragOverIndex(index)}
+                    onDragLeave={() => setDragOverIndex(null)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const src = Number(e.dataTransfer.getData('text/plain'))
+                      setDragOverIndex(null)
+                      if (!isNaN(src) && src !== index) {
+                        setFormData(prev => {
+                          const imgs = [...prev.images]
+                          const [moved] = imgs.splice(src, 1)
+                          imgs.splice(index, 0, moved)
+                          return { ...prev, images: imgs }
+                        })
+                      }
+                    }}
+                    className={`relative aspect-video rounded-md bg-neutral-950 border border-neutral-800 group overflow-hidden ${dragOverIndex === index ? 'ring-2 ring-yellow-400' : ''}`}
                   >
-                    <X className="h-3 w-3" />
-                  </button>
-                </div>
-              ))}
+                    <img src={url} alt={`Vehicle ${index + 1}`} className="h-full w-full object-cover" />
+
+                    {/* overlay for uploading / preview */}
+                    {isUploading && (
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                        <Loader2 className="h-5 w-5 animate-spin text-white" />
+                      </div>
+                    )}
+
+                    {isPreview && !isUploading && (
+                      <div className="absolute left-2 bottom-2 bg-black/60 text-xs text-white px-2 py-1 rounded-md">Preview</div>
+                    )}
+
+                    <div className="absolute top-1 right-1 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button
+                        type="button"
+                        onClick={() => removeImage(index)}
+                        className="p-1 bg-black/50 rounded-full"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+
+                    <div className="absolute left-1 bottom-1 text-xs text-neutral-300 bg-black/40 rounded px-2 py-1">
+                      {index + 1}
+                    </div>
+                  </div>
+                )
+              })}
               {formData.images.length === 0 && (
                 <div className="col-span-full border-2 border-dashed border-neutral-800 rounded-lg p-8 text-center text-neutral-500">
                   No images added yet. Click &quot;Add URL&quot; to add vehicle photos.
@@ -477,10 +651,11 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
           </Link>
           <Button 
             type="submit" 
-            disabled={loading}
+            disabled={loading || Object.keys(uploadingItems).length > 0}
             className="bg-white text-black hover:bg-neutral-200 min-w-[120px]"
+            title={Object.keys(uploadingItems).length > 0 ? 'Wait for uploads to finish' : undefined}
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {loading || Object.keys(uploadingItems).length > 0 ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
             {isEdit ? "Update Vehicle" : "Create Vehicle"}
           </Button>
         </div>

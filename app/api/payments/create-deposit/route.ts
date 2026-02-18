@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 // Square integration disabled: import removed
@@ -135,7 +136,9 @@ export async function POST(request: Request) {
                     carMake: car.make,
                     carModel: car.model,
                     carYear: car.year,
-                    carImage: car.images?.[0] ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${car.images[0]}` : undefined,
+                    carImage: car.images?.[0]
+                    ? (car.images[0].startsWith('http') ? car.images[0] : `${process.env.NEXT_PUBLIC_BASE_URL ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` : ''}${car.images[0]}`)
+                    : undefined,
 
                     pickupDatetime: booking.pickup_datetime,
                     dropoffDatetime: booking.dropoff_datetime,

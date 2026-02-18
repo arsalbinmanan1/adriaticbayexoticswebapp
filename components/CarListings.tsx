@@ -16,6 +16,17 @@ export default function CarListings() {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const FALLBACK_SVG = `data:image/svg+xml;utf8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400"><rect width="100%" height="100%" fill="#0b1220"/><text x="50%" y="50%" fill="#6b7280" font-family="Inter, Arial" font-size="20" text-anchor="middle" dominant-baseline="middle">No image available</text></svg>')}`;
+
+  function normalizeSrc(src?: string) {
+    if (!src) return '';
+    const s = src.trim();
+    if (/^https?:\/\//i.test(s)) return s;
+    if (s.startsWith('/')) return s.replace(/^\/public/, '');
+    const out = s.replace(/^\.\//, '').replace(/^public\//, '');
+    return out.startsWith('/') ? out : `/${out}`;
+  }
+
   useEffect(() => {
     async function loadCars() {
       const data = await getAllCars();
@@ -56,8 +67,9 @@ export default function CarListings() {
               <div className="relative overflow-hidden">
                 {car.images?.main ? (
                   <img
-                    src={car.images.main}
+                    src={normalizeSrc(car.images.main)}
                     alt={car.name}
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = FALLBACK_SVG; }}
                     className="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : (

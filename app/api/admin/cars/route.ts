@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getSession } from "@/lib/auth";
 
+function sanitizeImageInput(img: any): string {
+    if (!img) return ''
+    let v = String(img).trim()
+    v = v.replace(/^"(.*)"$/, '$1').replace(/^'(.*)'$/, '$1')
+    if (/^https?:\/\//i.test(v)) return v
+    v = v.replace(/^\.\//, '').replace(/^public\//, '')
+    if (!v.startsWith('/')) v = `/${v}`
+    return v
+}
+
 /**
  * POST /api/admin/cars
  * Create a new car
@@ -50,7 +60,7 @@ export async function POST(request: Request) {
                 security_deposit: parseNumeric(body.security_deposit),
                 status: body.status || "available",
                 current_location: body.current_location || null,
-                images: body.images || [],
+                images: (Array.isArray(body.images) ? body.images.map((i: any) => sanitizeImageInput(i)).filter(Boolean) : []),
                 features: body.features || [],
                 specifications: body.specifications || {},
             })
