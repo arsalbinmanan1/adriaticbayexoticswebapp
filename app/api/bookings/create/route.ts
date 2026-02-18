@@ -269,6 +269,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
             success: true,
             bookingId: booking.id,
+            bookingReference: booking.booking_reference || booking.reference_number || booking.id,
             amount: pricing.securityDepositAmount
         })
 

@@ -257,25 +257,28 @@ export default function CheckoutContent({ car, initialPromoCode }: CheckoutConte
         localStorage.removeItem(draftKey)
 
         // Payments are disabled — treat booking creation as completed.
-        // Show a modal and let the user choose where to go next.
+        // Show a modal with booking reference and actions.
+        const bookedRef = resData.bookingReference || resData.bookingId
+
         Swal.fire({
-          title: 'Booking Created!',
-          text: 'Your booking has been created and is visible in the admin panel.',
+          title: 'Booking Created',
+          html: `<div class="text-left">A member of our team will reach out to you very soon!<br/><br/><strong>Ref ${bookedRef}</strong></div>`,
           icon: 'success',
           background: '#18181b',
           color: '#fff',
-          confirmButtonText: 'View Orders',
           showDenyButton: true,
-          denyButtonText: 'Go to Dashboard',
-          showCancelButton: true,
-          confirmButtonColor: '#ef4444',
-          denyButtonColor: '#10b981'
+          denyButtonText: 'Contact CEOs',
+          confirmButtonText: 'Go To Dashboard',
+          confirmButtonColor: '#10b981',
+          denyButtonColor: '#ef4444'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '/'
+          } else if (result.isDenied) {
+            const mailto = `mailto:AdriaticBayExoticsLLC@gmail.com?subject=${encodeURIComponent('Booking Ref ' + bookedRef)}`
+            window.location.href = mailto
+          }
         })
-
-        // After showing the modal, take the user to the home page.
-        setTimeout(() => {
-          window.location.href = '/'
-        }, 1200)
       } else {
         setError(resData.error || 'Failed to create booking')
         Swal.fire({
