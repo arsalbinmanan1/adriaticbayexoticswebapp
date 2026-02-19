@@ -44,6 +44,7 @@
     "react-hook-form": "^7.71.1",
     "recharts": "^3.7.0",
     "resend": "^6.9.1",
+    "cloudinary": "^1.38.0",
     "square": "^44.0.0",
     "sweetalert2": "^11.26.17",
     "tailwind-merge": "^3.4.0",

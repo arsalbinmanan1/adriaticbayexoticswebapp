@@ -2,17 +2,21 @@
 import { NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth'
 import path from 'path'
-import fs from 'fs/promises'
+import { Readable } from 'stream'
+import { v2 as cloudinary } from 'cloudinary'
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+// Note: `export const config` is not supported for app route segments in Next.js
+// body parsing is disabled by using `await request.formData()` directly.
 
 export async function POST(request: Request) {
   const session = await getSession()
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // Ensure Cloudinary credentials are available on the server at runtime
+  if (!process.env.CLOUDINARY_URL) {
+    console.error('[upload-image] missing CLOUDINARY_URL')
+    return NextResponse.json({ error: 'Upload failed: missing CLOUDINARY_URL' }, { status: 500 })
+  }
 
   try {
     const formData = await request.formData()
@@ -34,20 +38,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'File too large (max 5MB)' }, { status: 413 })
     }
 
-    // sanitize filename
+    // sanitize filename (Cloudinary will also generate its own public id when omitted)
     const originalName = (file.name as string) || `upload-${Date.now()}`
     const ext = path.extname(originalName) || (mime === 'image/png' ? '.png' : '.jpg')
     const base = path.basename(originalName, ext).replace(/[^a-z0-9\-_.]/gi, '-').toLowerCase()
     const filename = `${base}-${Date.now()}${ext}`
 
-    const dir = path.join(process.cwd(), 'public', 'car-images')
-    await fs.mkdir(dir, { recursive: true })
-    const filepath = path.join(dir, filename)
+    // Configure Cloudinary using CLOUDINARY_URL from env
+    cloudinary.config({ cloudinary_url: process.env.CLOUDINARY_URL })
 
-    await fs.writeFile(filepath, buffer)
+    // Upload buffer to Cloudinary via upload_stream
+    const uploadResult: any = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'car-images', public_id: filename.replace(ext, ''), resource_type: 'image' },
+        (error, result) => {
+          if (error) return reject(error)
+          resolve(result)
+        }
+      )
 
-    const publicPath = `/car-images/${filename}`
-    return NextResponse.json({ path: publicPath })
+      const readable = new Readable()
+      readable.push(buffer)
+      readable.push(null)
+      readable.pipe(uploadStream)
+    })
+
+    const publicUrl = uploadResult?.secure_url || uploadResult?.url
+    if (!publicUrl) {
+      console.error('[upload-image] cloudinary upload no url', uploadResult)
+      return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
+    }
+
+    return NextResponse.json({ path: publicUrl })
   } catch (err) {
     console.error('[upload-image] error', err)
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 })
