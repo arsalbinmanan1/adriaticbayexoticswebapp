@@ -2,6 +2,9 @@
 -- Seed Cars with LOCAL Image Paths
 -- ==========================================
 -- This uses /public/car-images/ paths (no upload needed)
+-- when the app is running with a SUPABASE_URL set it will convert these
+-- relative names into the public bucket URLs automatically so you can also
+-- seed simple filenames and switch to bucket storage without editing code.
 
 -- Clear existing car data (optional)
 -- DELETE FROM cars WHERE slug IN ('corvette-c8-r', 'mclaren-570s', 'lamborghini-huracan', 'maserati-levante', 'lamborghini-urus', 'mclaren-650s');

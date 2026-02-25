@@ -1,4 +1,4 @@
-import { createClient } from './client'
+import { createClient, storagePublicUrl } from './client'
 import { createAdminClient } from './admin'
 
 export interface DbCar {
@@ -35,10 +35,26 @@ export interface DbCar {
     deleted_at?: string
 }
 
+
+
 function normalizeImageValue(img?: string | null): string {
     if (!img) return ''
     const v = String(img).trim()
+    // if already absolute URL just return it
     if (/^https?:\/\//i.test(v)) return v
+
+    // If the image value is a local/public path, we want to use the
+    // configured Supabase bucket instead of serving from /public/.  This
+    // makes it easy to switch over by simply seeding the database with
+    // the filenames or relative paths.  The environment variable
+    // `NEXT_PUBLIC_SUPABASE_IMAGE_BUCKET` lets callers pick a different
+    // bucket name, defaulting to `car-images`.
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        // strip leading slash so storagePublicUrl can append correctly
+        const relative = v.replace(/^\/+/, '')
+        return storagePublicUrl(relative)
+    }
+
     // keep absolute paths, but strip leading `/public` if present
     if (v.startsWith('/')) return v.replace(/^\/public/, '')
     // strip ./ or public/ then ensure leading slash

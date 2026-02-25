@@ -60,14 +60,33 @@ After upload, each image gets a URL like:
 https://your-project.supabase.co/storage/v1/object/public/car-images/Corvette1.jpeg
 ```
 
+> **Tip:** the application now automatically rewrites any relative path
+> (for example `/car-images/Corvette1.jpeg` or just `Corvette1.jpeg`) into
+> the full Supabase bucket URL using the `NEXT_PUBLIC_SUPABASE_URL` and an
+> optional `NEXT_PUBLIC_SUPABASE_IMAGE_BUCKET` variable (default
+> `car-images`). This means your seed data can continue to use short
+> filenames or local paths; the front–end will turn them into the correct
+> CDN URL at runtime.
+
 ### Step 4: Update Seed Script
 
-Replace image arrays with Supabase URLs:
+Replace image arrays with Supabase URLs (or leave the short paths and let
+`normalizeImageValue` convert them automatically at runtime):
 
 ```sql
 images,
-'["https://yourproject.supabase.co/storage/v1/object/public/car-images/Corvette1.jpeg", "https://yourproject.supabase.co/storage/v1/object/public/car-images/Corvette2.jpeg"]'::jsonb,
+'["https://yourproject.supabase.co/storage/v1/object/public/car-images/Corvette1.jpeg", 
+  "https://yourproject.supabase.co/storage/v1/object/public/car-images/Corvette2.jpeg"]'::jsonb,
 ```
+
+or simply
+
+```sql
+images,
+'["Corvette1.jpeg","Corvette2.jpeg"]'::jsonb,
+```
+
+and the code will build the public URL for you.
 
 **Benefit:** Better for production, CDN delivery, faster loading.
 
