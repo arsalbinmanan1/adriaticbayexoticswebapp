@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,7 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadingItems, setUploadingItems] = useState<Record<string, boolean>>({});
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [dropZoneActive, setDropZoneActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   
   const [formData, setFormData] = useState({
@@ -85,25 +86,57 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
     if (!v.startsWith('/')) v = `/${v}`
     return v
   }
-  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const processFiles = (files: FileList | File[]) => {
+    const fileArray = Array.from(files)
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp']
+    const maxBytes = 5 * 1024 * 1024
 
-    // create a temporary preview URL and insert it immediately so user sees preview & can reorder
-    const preview = URL.createObjectURL(file)
-    setFormData(prev => ({ ...prev, images: [...prev.images, preview] }))
+    fileArray.forEach((file) => {
+      if (!allowed.includes(file.type)) {
+        alert(`"${file.name}" is not allowed. Only PNG, JPG/JPEG and WEBP are supported.`)
+        return
+      }
+      if (file.size > maxBytes) {
+        alert(`"${file.name}" is too large (max 5 MB).`)
+        return
+      }
 
-    // mark preview as uploading
-    setUploadingItems(prev => {
-      const next = { ...prev, [preview]: true }
-      setUploading(Object.keys(next).length > 0)
-      return next
+      const preview = URL.createObjectURL(file)
+      setFormData(prev => ({ ...prev, images: [...prev.images, preview] }))
+      setUploadingItems(prev => {
+        const next = { ...prev, [preview]: true }
+        setUploading(Object.keys(next).length > 0)
+        return next
+      })
+      uploadFileAndReplace(file, preview)
     })
+  }
 
-    // perform upload and replace preview with final path
-    await uploadFileAndReplace(file, preview)
-
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files?.length) return
+    processFiles(files)
     e.currentTarget.value = ''
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDropZoneActive(false)
+    const files = e.dataTransfer.files
+    if (!files?.length) return
+    const imageFiles = Array.from(files).filter(f => f.type.startsWith('image/'))
+    if (imageFiles.length) processFiles(imageFiles)
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.dataTransfer.types.includes('Files')) setDropZoneActive(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) setDropZoneActive(false)
   }
 
   const uploadFileAndReplace = async (file: File, previewSrc: string) => {
@@ -166,6 +199,26 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
   }
 
   const triggerFileSelect = () => fileInputRef.current?.click()
+
+  const processFilesRef = useRef(processFiles)
+  processFilesRef.current = processFiles
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items
+      if (!items?.length) return
+      const files: File[] = []
+      for (let i = 0; i < items.length; i++) {
+        const file = items[i].getAsFile()
+        if (file?.type.startsWith('image/')) files.push(file)
+      }
+      if (files.length) {
+        e.preventDefault()
+        processFilesRef.current(files)
+      }
+    }
+    window.addEventListener('paste', onPaste)
+    return () => window.removeEventListener('paste', onPaste)
+  }, [])
   const addImageUrl = () => {
     const raw = prompt("Enter Image URL or path (e.g. /car-images/xx.jpg or https://...)")
     if (!raw) return
@@ -530,7 +583,8 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/webp"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
+                multiple
                 className="hidden"
                 onChange={handleFileInputChange}
               />
@@ -558,7 +612,12 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
               </Button>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            className={dropZoneActive ? "ring-2 ring-yellow-400 ring-offset-2 ring-offset-neutral-900 rounded-lg" : ""}
+          >
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {formData.images.map((url: string, index: number) => {
                 const isUploading = !!uploadingItems[url]
@@ -573,8 +632,12 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
                     onDragLeave={() => setDragOverIndex(null)}
                     onDrop={(e) => {
                       e.preventDefault();
-                      const src = Number(e.dataTransfer.getData('text/plain'))
                       setDragOverIndex(null)
+                      if (e.dataTransfer.files?.length) {
+                        processFiles(e.dataTransfer.files)
+                        return
+                      }
+                      const src = Number(e.dataTransfer.getData('text/plain'))
                       if (!isNaN(src) && src !== index) {
                         setFormData(prev => {
                           const imgs = [...prev.images]
@@ -615,9 +678,39 @@ export function CarForm({ initialData, isEdit }: CarFormProps) {
                   </div>
                 )
               })}
+              {formData.images.length > 0 && (
+                <div
+                  onClick={triggerFileSelect}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  className={`relative aspect-video rounded-md border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all ${
+                    dropZoneActive
+                      ? "border-yellow-400 bg-yellow-400/10 text-yellow-200"
+                      : "border-neutral-700 bg-neutral-900/30 hover:border-neutral-600 hover:bg-neutral-800/50 text-neutral-400 hover:text-neutral-300"
+                  }`}
+                >
+                  <Upload className="h-8 w-8 mb-2 opacity-60" />
+                  <span className="text-xs font-medium">Add more</span>
+                </div>
+              )}
               {formData.images.length === 0 && (
-                <div className="col-span-full border-2 border-dashed border-neutral-800 rounded-lg p-8 text-center text-neutral-500">
-                  No images added yet. Click &quot;Add URL&quot; to add vehicle photos.
+                <div
+                  onClick={triggerFileSelect}
+                  onDrop={handleDrop}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  className={`col-span-full border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
+                    dropZoneActive
+                      ? "border-yellow-400 bg-yellow-400/10 text-yellow-200"
+                      : "border-neutral-700 hover:border-neutral-600 hover:bg-neutral-800/30 text-neutral-400 hover:text-neutral-300"
+                  }`}
+                >
+                  <Upload className="mx-auto h-12 w-12 mb-4 opacity-60" />
+                  <p className="font-medium mb-1">
+                    {dropZoneActive ? "Drop images here" : "Drag & drop images here or click to browse"}
+                  </p>
+                  <p className="text-sm">PNG, JPG, WEBP up to 5 MB each</p>
                 </div>
               )}
             </div>
