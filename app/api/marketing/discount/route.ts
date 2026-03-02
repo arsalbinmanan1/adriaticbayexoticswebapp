@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendAdminLeadNotification } from '@/lib/email/send-admin-notification';
 
 export async function POST(req: NextRequest) {
   try {
@@ -63,6 +64,16 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+
+    // Send admin notification email (non-blocking)
+    sendAdminLeadNotification({
+      fullName,
+      phoneNumber,
+      email: null,
+      source: 'discount_popup',
+      promoCode,
+      discount: discountPercentage,
+    }).catch((err) => console.error('[DISCOUNT POPUP] Admin email failed:', err));
 
     return NextResponse.json({
       success: true,

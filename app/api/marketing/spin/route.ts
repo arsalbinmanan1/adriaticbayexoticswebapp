@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { v4 as uuidv4 } from "uuid";
+import { sendAdminLeadNotification } from "@/lib/email/send-admin-notification";
 
 const PRIZES = [
     { text: "5% Off", weight: 40, discount: 5, type: "percentage" },
@@ -89,6 +90,17 @@ export async function POST(req: NextRequest) {
             source: "spin_wheel",
             interaction_id: interactionId,
         });
+
+        // Send admin notification email (non-blocking)
+        sendAdminLeadNotification({
+            fullName,
+            phoneNumber,
+            email: undefined,
+            source: "spin_wheel",
+            promoCode: promoCode ?? undefined,
+            prize: selectedPrize.text,
+            discount: selectedPrize.discount,
+        }).catch((err) => console.error("[SPIN WHEEL] Admin email failed:", err));
 
         return NextResponse.json({
             success: true,

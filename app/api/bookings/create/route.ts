@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { calculateAmounts } from '@/lib/payments/calculateAmounts'
 import { normalizePhoneNumber } from '@/lib/validation/phone'
+import { sendAdminBookingNotification } from '@/lib/email/send-admin-notification'
+import { format } from 'date-fns'
 
 /**
  * API Route: /api/bookings/create
@@ -265,6 +267,23 @@ export async function POST(request: Request) {
 
 
         if (insertError) throw insertError
+
+        // Send admin notification email (non-blocking)
+        const carName = `${car.make} ${car.model}`
+        sendAdminBookingNotification({
+          bookingId: booking.id,
+          customerName: customerName,
+          customerEmail: customerEmail,
+          customerPhone: normalizedPhone,
+          carName,
+          pickupDate: format(new Date(pickupDatetime), 'PPP p'),
+          dropoffDate: format(new Date(dropoffDatetime), 'PPP p'),
+          pickupLocation,
+          dropoffLocation,
+          totalAmount: `$${pricing.totalRentalAmount.toFixed(2)}`,
+          depositAmount: `$${pricing.securityDepositAmount.toFixed(2)}`,
+          status: 'pending',
+        }).catch((err) => console.error('[BOOKING CREATE] Admin email failed:', err))
 
         return NextResponse.json({
             success: true,

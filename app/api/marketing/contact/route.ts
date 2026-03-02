@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendAdminContactFormNotification } from "@/lib/email/send-admin-notification";
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,6 +38,14 @@ export async function POST(req: NextRequest) {
     }
 
     console.log("[CONTACT FORM] New lead captured:", data.id);
+
+    // Send admin notification email (non-blocking)
+    sendAdminContactFormNotification({
+      fullName: fullName,
+      email,
+      phoneNumber,
+      message,
+    }).catch((err) => console.error("[CONTACT FORM] Admin email failed:", err));
 
     return NextResponse.json({
       success: true,
