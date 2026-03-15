@@ -1,4 +1,5 @@
 import { createAdminClient } from "@/lib/supabase/admin";
+import { unstable_noStore as noStore } from "next/cache";
 import { 
   Table, 
   TableBody, 
@@ -12,8 +13,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Edit, Trash2, Car as CarIcon } from "lucide-react";
 import { DeleteCarButton } from "@/components/admin/DeleteCarButton";
+import { format } from "date-fns";
+
+export const dynamic = "force-dynamic";
 
 export default async function CarsPage() {
+  noStore();
   const supabase = createAdminClient();
   
   const { data: cars } = await supabase
@@ -55,6 +60,7 @@ export default async function CarsPage() {
               <TableHead className="text-neutral-400">VIN & Plate</TableHead>
               <TableHead className="text-neutral-400">Daily Rate</TableHead>
               <TableHead className="text-neutral-400">Status</TableHead>
+              <TableHead className="text-neutral-400">Listed</TableHead>
               <TableHead className="text-right text-neutral-400">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -96,6 +102,11 @@ export default async function CarsPage() {
                     {car.status}
                   </Badge>
                 </TableCell>
+                <TableCell className="text-neutral-400 text-sm">
+                  {car.created_at
+                    ? format(new Date(car.created_at), "MMM d, yyyy")
+                    : "—"}
+                </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Link href={`/admin/cars/${car.id}/edit`}>
@@ -110,7 +121,7 @@ export default async function CarsPage() {
             ))}
             {(!cars || cars.length === 0) && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-10 text-neutral-500">
+                <TableCell colSpan={7} className="text-center py-10 text-neutral-500">
                   No cars found in your fleet.
                 </TableCell>
               </TableRow>

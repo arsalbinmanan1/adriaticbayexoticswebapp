@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Timer, Sparkles, Heart } from "lucide-react";
+import { X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -17,10 +17,9 @@ interface MarketingBannerProps {
     };
   };
   onOpenSpinWheel?: () => void;
-  onOpenValentines?: () => void;
 }
 
-export default function MarketingBanner({ campaign, onOpenSpinWheel, onOpenValentines }: MarketingBannerProps) {
+export default function MarketingBanner({ campaign, onOpenSpinWheel }: MarketingBannerProps) {
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -67,20 +66,6 @@ export default function MarketingBanner({ campaign, onOpenSpinWheel, onOpenValen
             <span className="sm:hidden">7% flat</span>
           </Button>
         )}
-
-        {/* Valentine's Button */}
-        {onOpenValentines && (
-          <Button 
-            size="sm"
-            onClick={onOpenValentines}
-            className="bg-pink-500 text-white border-none hover:bg-pink-600 h-8 px-3 sm:px-4 rounded-full font-bold text-xs transition-all hover:scale-105"
-          >
-            <Heart className="w-3.5 h-3.5 mr-1" />
-            <span className="hidden sm:inline">Valentine's</span>
-            <span className="sm:hidden">💝</span>
-          </Button>
-        )}
-
 
         <button 
           onClick={() => setIsVisible(false)}

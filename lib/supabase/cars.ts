@@ -17,7 +17,8 @@ export interface DbCar {
     four_hour_rate?: number
     weekly_rate?: number
     monthly_rate?: number
-    security_deposit: number
+    security_deposit?: number
+    deposit_amount?: number
     status: 'available' | 'booked' | 'maintenance' | 'inactive'
     current_location: string
     images: string[]
@@ -77,7 +78,7 @@ export function mapDbCarToInterface(dbCar: DbCar) {
         pricing: {
             perDay: Number(dbCar.daily_rate),
             fourHours: dbCar.four_hour_rate ? Number(dbCar.four_hour_rate) : undefined,
-            deposit: Number(dbCar.security_deposit),
+            deposit: Number(dbCar.security_deposit ?? dbCar.deposit_amount ?? 0),
         },
         colors: {
             exterior: dbCar.exterior_color || 'Not specified',

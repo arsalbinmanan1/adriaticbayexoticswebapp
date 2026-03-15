@@ -21,7 +21,7 @@ export async function GET() {
         }
 
         // Extract relevant data for the banner
-        const promoCode = campaign.config?.promo || "VALENTINE2026";
+        const promoCode = campaign.config?.promo || "";
         const bannerText = campaign.config?.theme?.banner || campaign.description;
 
         return NextResponse.json({

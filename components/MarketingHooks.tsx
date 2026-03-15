@@ -3,14 +3,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import DiscountPopup from "./DiscountPopup";
-import ValentinesPopup from "./ValentinesPopup";
 import MarketingBanner from "./MarketingBanner";
 
 export default function MarketingHooks() {
   const searchParams = useSearchParams();
   const [isMounted, setIsMounted] = useState(false);
   const [showSpinWheel, setShowSpinWheel] = useState(false);
-  const [showValentines, setShowValentines] = useState(false);
   const [activeTime, setActiveTime] = useState(0);
   const [isActive, setIsActive] = useState(true);
   const [activeCampaign, setActiveCampaign] = useState<any>(null);
@@ -39,14 +37,6 @@ export default function MarketingHooks() {
     };
     fetchCampaign();
   }, [searchParams]);
-
-  // Valentine's season logic (February 10 - February 17)
-  const isValentinesSeason = () => {
-    const now = new Date();
-    const month = now.getMonth(); 
-    const day = now.getDate();
-    return month === 1 && day >= 10 && day <= 17;
-  };
 
   // Track user activity
   useEffect(() => {
@@ -89,34 +79,13 @@ export default function MarketingHooks() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Show Valentine's popup
-  useEffect(() => {
-    if (!isMounted || !isValentinesSeason()) return;
-    const hasSeenValentines = sessionStorage.getItem('hasSeenValentinesPopup');
-    if (!hasSeenValentines) {
-      const timer = setTimeout(() => {
-        setShowValentines(true);
-        sessionStorage.setItem('hasSeenValentinesPopup', 'true');
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [isMounted]);
-
   const handleCloseSpinWheel = useCallback(() => {
     setShowSpinWheel(false);
     localStorage.setItem('lastSpinWheelTime', Date.now().toString());
   }, []);
 
-  const handleCloseValentines = useCallback(() => {
-    setShowValentines(false);
-  }, []);
-
   const handleOpenSpinWheel = useCallback(() => {
     setShowSpinWheel(true);
-  }, []);
-
-  const handleOpenValentines = useCallback(() => {
-    setShowValentines(true);
   }, []);
 
   if (!isMounted) return null;
@@ -127,11 +96,9 @@ export default function MarketingHooks() {
         <MarketingBanner 
           campaign={activeCampaign}
           onOpenSpinWheel={handleOpenSpinWheel}
-          onOpenValentines={handleOpenValentines}
         />
       )}
       <DiscountPopup isOpen={showSpinWheel} onClose={handleCloseSpinWheel} />
-      <ValentinesPopup isOpen={showValentines} onClose={handleCloseValentines} />
     </>
   );
 }
